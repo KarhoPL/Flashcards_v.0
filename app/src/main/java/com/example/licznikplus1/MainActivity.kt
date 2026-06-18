@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -24,6 +23,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 
 
 class MainActivity : ComponentActivity() {
@@ -35,6 +36,11 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+enum class FlashcardField {
+    POLISH,
+    PINYIN,
+    CHINESE
+}
 
 data class Flashcard(
     val polish: String,
@@ -42,14 +48,18 @@ data class Flashcard(
     val chinese: String
 )
 
+fun Flashcard.getField(field: FlashcardField): String {
+    return when (field) {
+        FlashcardField.POLISH -> polish
+        FlashcardField.PINYIN -> pinyin
+        FlashcardField.CHINESE -> chinese
+    }
+}
 
 @Composable
 
 fun CounterScreen() {
 
-    var count by rememberSaveable {
-        mutableStateOf(0)
-    }
     val flashcards = listOf(
         Flashcard("dzień dobry", "nǐ hǎo", "你好"),
         Flashcard("dziękuję", "xièxie", "谢谢"),
@@ -65,6 +75,12 @@ fun CounterScreen() {
     var showAnswer by rememberSaveable {
         mutableStateOf(false)
     }
+    var questionField by rememberSaveable {
+        mutableStateOf(FlashcardField.CHINESE)
+    }
+    val answerFields = FlashcardField.values().filter {
+        it != questionField
+    }
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -79,7 +95,7 @@ fun CounterScreen() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                text = currentCard.chinese,
+                text = currentCard.getField(questionField),
                 fontSize = 48.sp
             )
             }
@@ -96,15 +112,13 @@ fun CounterScreen() {
 
                 if (showAnswer) {
 
-                    Text(
-                        text = currentCard.pinyin,
-                        fontSize = 24.sp
-                    )
+                    answerFields.forEach { field ->
 
-                    Text(
-                        text = currentCard.polish,
-                        fontSize = 24.sp
-                    )
+                        Text(
+                            text = currentCard.getField(field),
+                            fontSize = 24.sp
+                        )
+                    }
                 }
             }
         }
@@ -112,8 +126,10 @@ fun CounterScreen() {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16 .dp),
-            horizontalArrangement = Arrangement.Center
+                .padding(horizontal =30.dp, vertical = 16.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+
+
         ) {
             Button(
                 onClick = {
@@ -124,7 +140,7 @@ fun CounterScreen() {
             ) {
                 Text("Poprzednie")
             }
-
+            //Spacer(modifier = Modifier.size())
             Button(
                 onClick = {
                     currentIndex = (currentIndex + 1) % flashcards.size
@@ -135,6 +151,39 @@ fun CounterScreen() {
                 Text("Następne")
             }
 
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Button(
+                onClick = {
+                    questionField = FlashcardField.CHINESE
+                    showAnswer = false
+                }
+            ) {
+                Text("中文")
+            }
+
+            Button(
+                onClick = {
+                    questionField = FlashcardField.PINYIN
+                    showAnswer = false
+                }
+            ) {
+                Text("Pinyin")
+            }
+
+            Button(
+                onClick = {
+                    questionField = FlashcardField.POLISH
+                    showAnswer = false
+                }
+            ) {
+                Text("PL")
+            }
         }
         Row(
             modifier = Modifier
@@ -156,13 +205,7 @@ fun CounterScreen() {
 
     }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+
 
 @Preview(showBackground = true)
 @Composable
