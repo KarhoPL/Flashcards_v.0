@@ -4,8 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,16 +20,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.layout.Row
 import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-
+import androidx.compose.ui.unit.sp
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.decodeFromString
+import androidx.compose.ui.platform.LocalContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +42,8 @@ enum class FlashcardField {
     CHINESE
 }
 
+
+@Serializable
 data class Flashcard(
     val polish: String,
     val pinyin: String,
@@ -55,18 +57,21 @@ fun Flashcard.getField(field: FlashcardField): String {
         FlashcardField.CHINESE -> chinese
     }
 }
+fun loadFlashcards(context: android.content.Context): List<Flashcard> {
+
+    val jsonString = context.assets
+        .open("flashcards.json")
+        .bufferedReader()
+        .use { it.readText() }
+
+    return Json.decodeFromString(jsonString)
+}
 
 @Composable
 
 fun CounterScreen() {
-
-    val flashcards = listOf(
-        Flashcard("dzień dobry", "nǐ hǎo", "你好"),
-        Flashcard("dziękuję", "xièxie", "谢谢"),
-        Flashcard("do widzenia", "zàijiàn", "再见"),
-        Flashcard("woda", "shuǐ", "水"),
-        Flashcard("herbata", "chá", "茶")
-    )
+    val context = LocalContext.current
+    val flashcards = loadFlashcards(context)
 
     var currentIndex by rememberSaveable {
         mutableStateOf(0)
