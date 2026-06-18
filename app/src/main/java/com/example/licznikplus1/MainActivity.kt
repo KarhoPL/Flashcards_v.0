@@ -164,16 +164,23 @@ fun CounterScreen() {
                     showAnswer = false
                 }
             ) {
-                Text("中文")
+                if (questionField == FlashcardField.CHINESE)
+                    Text("✓中文")
+                else
+                    Text("中文")
             }
 
+            // to będzie kiedyś do zastąpienia dźwiękiem
             Button(
                 onClick = {
                     questionField = FlashcardField.PINYIN
                     showAnswer = false
                 }
             ) {
-                Text("Pinyin")
+                if (questionField == FlashcardField.PINYIN)
+                    Text("✓Pinyin")
+                else
+                    Text("Pinyin")
             }
 
             Button(
@@ -182,7 +189,10 @@ fun CounterScreen() {
                     showAnswer = false
                 }
             ) {
-                Text("PL")
+                if (questionField == FlashcardField.POLISH)
+                    Text("✓PL")
+                else
+                    Text("PL")
             }
         }
         Row(
