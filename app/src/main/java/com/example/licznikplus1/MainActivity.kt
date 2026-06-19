@@ -23,9 +23,6 @@ class MainActivity : ComponentActivity() {
                 mutableStateOf(FlashcardField.CHINESE)
             }
 
-            var randomMode by rememberSaveable {
-                mutableStateOf(false)
-            }
             val navController = rememberNavController()
 
             NavHost(
@@ -37,7 +34,6 @@ class MainActivity : ComponentActivity() {
                     FlashcardScreen(
                         navController = navController,
                         questionField = questionField,
-                        randomMode = randomMode
                     )
                 }
 
@@ -46,8 +42,6 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         questionField = questionField,
                         onQuestionFieldChange = { questionField = it },
-                        randomMode = randomMode,
-                        onRandomModeChange = { randomMode = it }
                     )
                 }
             }

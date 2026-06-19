@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 fun NavigationButtons(
     onPreviousClick: () -> Unit,
     onNextClick: () -> Unit,
-    randomMode: Boolean
 ) {
     Row(
         modifier = Modifier
@@ -23,24 +22,16 @@ fun NavigationButtons(
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
 
-        if (!randomMode) {
-            Button(
-                onClick = onPreviousClick
-            ) {
-                Text("Poprzednie")
-            }
+        Button(
+            onClick = onPreviousClick
+        ) {
+            Text("Poprzednie")
         }
 
         Button(
             onClick = onNextClick
         ) {
-            Text(
-                if (randomMode) {
-                    "Losuj"
-                } else {
-                    "Następne"
-                }
-            )
+            Text("Następne")
         }
     }
 }

@@ -32,7 +32,6 @@ import kotlin.random.Random
 fun FlashcardScreen(
     navController: NavController,
     questionField: FlashcardField,
-    randomMode: Boolean
 ) {
     val context = LocalContext.current
     val flashcards = loadFlashcards(context)
@@ -111,14 +110,9 @@ fun FlashcardScreen(
                 showAnswer = false
             },
             onNextClick = {
-                currentIndex = if (randomMode) {
-                    Random.nextInt(flashcards.size)
-                } else {
-                    (currentIndex + 1) % flashcards.size
-                }
+                currentIndex = (currentIndex - 1 + flashcards.size) % flashcards.size
                 showAnswer = false
             },
-            randomMode = randomMode
         )
 
         Row(

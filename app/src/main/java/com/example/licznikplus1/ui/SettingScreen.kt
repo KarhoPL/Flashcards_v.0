@@ -22,8 +22,6 @@ fun SettingsScreen(
     navController: NavController,
     questionField: FlashcardField,
     onQuestionFieldChange: (FlashcardField) -> Unit,
-    randomMode: Boolean,
-    onRandomModeChange: (Boolean) -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -45,19 +43,7 @@ fun SettingsScreen(
             selectedField = questionField,
             onFieldSelected = onQuestionFieldChange
         )
-        Button(
-            onClick = {
-                onRandomModeChange(!randomMode)
-            }
-        ) {
-            Text(
-                if (randomMode) {
-                    "Tryb: losowo"
-                } else {
-                    "Tryb: po kolei"
-                }
-            )
-        }
+
 
     }
 }
