@@ -26,6 +26,10 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.decodeFromString
 import androidx.compose.ui.platform.LocalContext
+import com.example.licznikplus1.data.Flashcard
+import com.example.licznikplus1.data.FlashcardField
+import com.example.licznikplus1.data.getField
+import com.example.licznikplus1.data.loadFlashcards
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,37 +38,6 @@ class MainActivity : ComponentActivity() {
             CounterScreen()
         }
     }
-}
-
-enum class FlashcardField {
-    POLISH,
-    PINYIN,
-    CHINESE
-}
-
-
-@Serializable
-data class Flashcard(
-    val polish: String,
-    val pinyin: String,
-    val chinese: String
-)
-
-fun Flashcard.getField(field: FlashcardField): String {
-    return when (field) {
-        FlashcardField.POLISH -> polish
-        FlashcardField.PINYIN -> pinyin
-        FlashcardField.CHINESE -> chinese
-    }
-}
-fun loadFlashcards(context: android.content.Context): List<Flashcard> {
-
-    val jsonString = context.assets
-        .open("flashcards.json")
-        .bufferedReader()
-        .use { it.readText() }
-
-    return Json.decodeFromString(jsonString)
 }
 
 @Composable
