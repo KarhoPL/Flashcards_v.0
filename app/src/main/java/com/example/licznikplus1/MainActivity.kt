@@ -3,233 +3,33 @@ package com.example.licznikplus1
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.decodeFromString
-import androidx.compose.ui.platform.LocalContext
-import com.example.licznikplus1.data.Flashcard
-import com.example.licznikplus1.data.FlashcardField
-import com.example.licznikplus1.data.getField
-import com.example.licznikplus1.data.loadFlashcards
-import kotlin.random.Random
+import com.example.licznikplus1.ui.FlashcardScreen
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.licznikplus1.ui.FlashcardScreen
+import com.example.licznikplus1.ui.SettingsScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            CounterScreen()
-        }
-    }
-}
 
-@Composable
+            val navController = rememberNavController()
 
-fun CounterScreen() {
-    val context = LocalContext.current
-    val flashcards = loadFlashcards(context)
-
-    var currentIndex by rememberSaveable {
-        mutableStateOf(0)
-    }
-    val currentCard = flashcards[currentIndex]
-    var showAnswer by rememberSaveable {
-        mutableStateOf(false)
-    }
-    var questionField by rememberSaveable {
-        mutableStateOf(FlashcardField.CHINESE)
-    }
-    var randomMode by rememberSaveable {
-        mutableStateOf(false)
-    }
-
-    val answerFields = FlashcardField.values().filter {
-        it != questionField
-    }
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-
-    ) {
-        Box(
-            modifier = Modifier.weight(1f),
-            contentAlignment = Alignment.BottomCenter,
-
-            ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                text = currentCard.getField(questionField),
-                fontSize = 48.sp
-            )
-            }
-        }
-        Box(
-            modifier = Modifier.weight(1f),
-            contentAlignment = Alignment.TopCenter,
-
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+            NavHost(
+                navController = navController,
+                startDestination = "flashcards"
             ) {
 
+                composable("flashcards") {
+                    FlashcardScreen(navController)
+                }
 
-                if (showAnswer) {
-
-                    answerFields.forEach { field ->
-
-                        Text(
-                            text = currentCard.getField(field),
-                            fontSize = 24.sp
-                        )
-                    }
+                composable("settings") {
+                    SettingsScreen()
                 }
             }
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Button(
-                onClick = {
-                    randomMode = !randomMode
-                }
-            ) {
-                Text(
-                    if (randomMode) {
-                        "Tryb: losowo"
-                    } else {
-                        "Tryb: po kolei"
-                    }
-                )
-            }
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal =30.dp, vertical = 16.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-
-
-        ) {
-            Button(
-                onClick = {
-                    currentIndex = if (randomMode) {
-                        Random.nextInt(flashcards.size)
-                    } else {
-                        (currentIndex - 1) % flashcards.size
-                    }
-                    showAnswer = false
-
-                }
-            ) {
-                Text("Poprzednie")
-            }
-            //Spacer(modifier = Modifier.size())
-
-            Button(
-                onClick = {
-                    currentIndex = if (randomMode) {
-                        Random.nextInt(flashcards.size)
-                    } else {
-                        (currentIndex + 1) % flashcards.size
-                    }
-                    showAnswer = false
-
-                }
-            ) {
-                Text("Następne")
-            }
-
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Button(
-                onClick = {
-                    questionField = FlashcardField.CHINESE
-                    showAnswer = false
-                }
-            ) {
-                if (questionField == FlashcardField.CHINESE)
-                    Text("✓中文")
-                else
-                    Text("中文")
-            }
-
-            // to będzie kiedyś do zastąpienia dźwiękiem
-            Button(
-                onClick = {
-                    questionField = FlashcardField.PINYIN
-                    showAnswer = false
-                }
-            ) {
-                if (questionField == FlashcardField.PINYIN)
-                    Text("✓Pinyin")
-                else
-                    Text("Pinyin")
-            }
-
-            Button(
-                onClick = {
-                    questionField = FlashcardField.POLISH
-                    showAnswer = false
-                }
-            ) {
-                if (questionField == FlashcardField.POLISH)
-                    Text("✓PL")
-                else
-                    Text("PL")
-            }
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Button(
-                onClick = {
-                    showAnswer = true
-                }
-            ) {
-                Text("Pokaż odpowiedź")
-            }
-        }
-
     }
-
-
-    }
-
-
-
-@Preview(showBackground = true)
-@Composable
-fun CounterPreview() {
-    CounterScreen()
 }
