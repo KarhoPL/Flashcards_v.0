@@ -9,12 +9,23 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.licznikplus1.ui.FlashcardScreen
 import com.example.licznikplus1.ui.SettingsScreen
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import com.example.licznikplus1.data.FlashcardField
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            var questionField by rememberSaveable {
+                mutableStateOf(FlashcardField.CHINESE)
+            }
 
+            var randomMode by rememberSaveable {
+                mutableStateOf(false)
+            }
             val navController = rememberNavController()
 
             NavHost(
@@ -23,11 +34,21 @@ class MainActivity : ComponentActivity() {
             ) {
 
                 composable("flashcards") {
-                    FlashcardScreen(navController)
+                    FlashcardScreen(
+                        navController = navController,
+                        questionField = questionField,
+                        randomMode = randomMode
+                    )
                 }
 
                 composable("settings") {
-                    SettingsScreen()
+                    SettingsScreen(
+                        navController = navController,
+                        questionField = questionField,
+                        onQuestionFieldChange = { questionField = it },
+                        randomMode = randomMode,
+                        onRandomModeChange = { randomMode = it }
+                    )
                 }
             }
         }

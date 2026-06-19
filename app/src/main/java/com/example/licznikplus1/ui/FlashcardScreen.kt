@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.licznikplus1.data.FlashcardField
 import com.example.licznikplus1.data.getField
 import com.example.licznikplus1.data.loadFlashcards
@@ -28,7 +29,9 @@ import kotlin.random.Random
 @Composable
 
 fun FlashcardScreen(
-    navController: androidx.navigation.NavController
+    navController: NavController,
+    questionField: FlashcardField,
+    randomMode: Boolean
 ) {
     val context = LocalContext.current
     val flashcards = loadFlashcards(context)
@@ -38,12 +41,6 @@ fun FlashcardScreen(
     }
     val currentCard = flashcards[currentIndex]
     var showAnswer by rememberSaveable {
-        mutableStateOf(false)
-    }
-    var questionField by rememberSaveable {
-        mutableStateOf(FlashcardField.CHINESE)
-    }
-    var randomMode by rememberSaveable {
         mutableStateOf(false)
     }
 
@@ -106,26 +103,7 @@ fun FlashcardScreen(
                 }
             }
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Button(
-                onClick = {
-                    randomMode = !randomMode
-                }
-            ) {
-                Text(
-                    if (randomMode) {
-                        "Tryb: losowo"
-                    } else {
-                        "Tryb: po kolei"
-                    }
-                )
-            }
-        }
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -164,49 +142,7 @@ fun FlashcardScreen(
             }
 
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Button(
-                onClick = {
-                    questionField = FlashcardField.CHINESE
-                    showAnswer = false
-                }
-            ) {
-                if (questionField == FlashcardField.CHINESE)
-                    Text("✓中文")
-                else
-                    Text("中文")
-            }
 
-            // to będzie kiedyś do zastąpienia dźwiękiem
-            Button(
-                onClick = {
-                    questionField = FlashcardField.PINYIN
-                    showAnswer = false
-                }
-            ) {
-                if (questionField == FlashcardField.PINYIN)
-                    Text("✓Pinyin")
-                else
-                    Text("Pinyin")
-            }
-
-            Button(
-                onClick = {
-                    questionField = FlashcardField.POLISH
-                    showAnswer = false
-                }
-            ) {
-                if (questionField == FlashcardField.POLISH)
-                    Text("✓PL")
-                else
-                    Text("PL")
-            }
-        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
