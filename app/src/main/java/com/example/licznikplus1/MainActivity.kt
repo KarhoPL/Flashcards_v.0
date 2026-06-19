@@ -22,6 +22,9 @@ class MainActivity : ComponentActivity() {
             var questionField by rememberSaveable {
                 mutableStateOf(FlashcardField.CHINESE)
             }
+            var autoPlayAudio by rememberSaveable {
+                mutableStateOf(false)
+            }
 
             val navController = rememberNavController()
 
@@ -34,6 +37,7 @@ class MainActivity : ComponentActivity() {
                     FlashcardScreen(
                         navController = navController,
                         questionField = questionField,
+                        autoPlayAudio = autoPlayAudio
                     )
                 }
 
@@ -41,7 +45,9 @@ class MainActivity : ComponentActivity() {
                     SettingsScreen(
                         navController = navController,
                         questionField = questionField,
-                        onQuestionFieldChange = { questionField = it },
+                        onQuestionFieldChange = { questionField = it},
+                        autoPlayAudio = autoPlayAudio,
+                        onAutoPlayAudioChange = { autoPlayAudio = it },
                     )
                 }
             }

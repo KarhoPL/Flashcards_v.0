@@ -1,4 +1,5 @@
 package com.example.licznikplus1.ui
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,10 @@ import com.example.licznikplus1.data.getField
 import com.example.licznikplus1.data.loadFlashcards
 import com.example.licznikplus1.ui.components.NavigationButtons
 import kotlin.random.Random
+import androidx.compose.runtime.remember
+import com.example.licznikplus1.audio.TextToSpeechManager
+import com.example.licznikplus1.data.hasAudio
+
 
 
 @Composable
@@ -32,14 +37,21 @@ import kotlin.random.Random
 fun FlashcardScreen(
     navController: NavController,
     questionField: FlashcardField,
+    autoPlayAudio: Boolean
 ) {
     val context = LocalContext.current
+    val textToSpeechManager = remember {
+        TextToSpeechManager(context)
+    }
     val flashcards = loadFlashcards(context)
 
     var currentIndex by rememberSaveable {
         mutableStateOf(0)
     }
     val currentCard = flashcards[currentIndex]
+    fun playAudio() {
+        textToSpeechManager.speak(currentCard.chinese)
+    }
     var showAnswer by rememberSaveable {
         mutableStateOf(false)
     }
@@ -48,7 +60,21 @@ fun FlashcardScreen(
         it != questionField
     }
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable {
+                if (!showAnswer) {
+                    showAnswer = true
+
+                    if (autoPlayAudio && questionField.hasAudio()) {
+                        playAudio()
+                    }
+                } else {
+                    if (questionField.hasAudio()) {
+                        playAudio()
+                    }
+                }
+            },
         horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {
@@ -110,25 +136,10 @@ fun FlashcardScreen(
                 showAnswer = false
             },
             onNextClick = {
-                currentIndex = (currentIndex - 1 + flashcards.size) % flashcards.size
+                currentIndex = (currentIndex + 1) % flashcards.size
                 showAnswer = false
             },
         )
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Button(
-                onClick = {
-                    showAnswer = true
-                }
-            ) {
-                Text("Pokaż odpowiedź")
-            }
-        }
 
     }
 

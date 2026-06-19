@@ -22,6 +22,8 @@ fun SettingsScreen(
     navController: NavController,
     questionField: FlashcardField,
     onQuestionFieldChange: (FlashcardField) -> Unit,
+    autoPlayAudio: Boolean,
+    onAutoPlayAudioChange: (Boolean) -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -43,7 +45,19 @@ fun SettingsScreen(
             selectedField = questionField,
             onFieldSelected = onQuestionFieldChange
         )
-
+        Button(
+            onClick = {
+                onAutoPlayAudioChange(!autoPlayAudio)
+            }
+        ) {
+            Text(
+                if (autoPlayAudio) {
+                    "Czytaj po odkryciu: włączone"
+                } else {
+                    "Czytaj po odkryciu: wyłączone"
+                }
+            )
+        }
 
     }
 }

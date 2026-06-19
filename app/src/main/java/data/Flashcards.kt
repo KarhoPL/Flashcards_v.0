@@ -5,7 +5,8 @@ import kotlinx.serialization.Serializable
 enum class FlashcardField {
     POLISH,
     PINYIN,
-    CHINESE
+    CHINESE,
+    AUDIO
 }
 
 @Serializable
@@ -20,5 +21,15 @@ fun Flashcard.getField(field: FlashcardField): String {
         FlashcardField.POLISH -> polish
         FlashcardField.PINYIN -> pinyin
         FlashcardField.CHINESE -> chinese
+        FlashcardField.AUDIO -> ""
     }
+}
+
+fun FlashcardField.isText(): Boolean {
+    return this != FlashcardField.AUDIO
+}
+
+fun FlashcardField.hasAudio(): Boolean {
+    return this == FlashcardField.CHINESE ||
+            this == FlashcardField.AUDIO
 }
