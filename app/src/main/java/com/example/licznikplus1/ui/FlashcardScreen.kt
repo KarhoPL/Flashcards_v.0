@@ -23,6 +23,7 @@ import androidx.navigation.NavController
 import com.example.licznikplus1.data.FlashcardField
 import com.example.licznikplus1.data.getField
 import com.example.licznikplus1.data.loadFlashcards
+import com.example.licznikplus1.ui.components.NavigationButtons
 import kotlin.random.Random
 
 
@@ -104,44 +105,21 @@ fun FlashcardScreen(
             }
         }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal =30.dp, vertical = 16.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-
-
-            ) {
-            Button(
-                onClick = {
-                    currentIndex = if (randomMode) {
-                        Random.nextInt(flashcards.size)
-                    } else {
-                        (currentIndex - 1) % flashcards.size
-                    }
-                    showAnswer = false
-
+        NavigationButtons(
+            onPreviousClick = {
+                currentIndex = (currentIndex - 1 + flashcards.size) % flashcards.size
+                showAnswer = false
+            },
+            onNextClick = {
+                currentIndex = if (randomMode) {
+                    Random.nextInt(flashcards.size)
+                } else {
+                    (currentIndex + 1) % flashcards.size
                 }
-            ) {
-                Text("Poprzednie")
-            }
-            //Spacer(modifier = Modifier.size())
-
-            Button(
-                onClick = {
-                    currentIndex = if (randomMode) {
-                        Random.nextInt(flashcards.size)
-                    } else {
-                        (currentIndex + 1) % flashcards.size
-                    }
-                    showAnswer = false
-
-                }
-            ) {
-                Text("Następne")
-            }
-
-        }
+                showAnswer = false
+            },
+            randomMode = randomMode
+        )
 
         Row(
             modifier = Modifier
