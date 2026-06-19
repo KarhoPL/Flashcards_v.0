@@ -30,6 +30,7 @@ import com.example.licznikplus1.data.Flashcard
 import com.example.licznikplus1.data.FlashcardField
 import com.example.licznikplus1.data.getField
 import com.example.licznikplus1.data.loadFlashcards
+import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +57,10 @@ fun CounterScreen() {
     var questionField by rememberSaveable {
         mutableStateOf(FlashcardField.CHINESE)
     }
+    var randomMode by rememberSaveable {
+        mutableStateOf(false)
+    }
+
     val answerFields = FlashcardField.values().filter {
         it != questionField
     }
@@ -100,7 +105,26 @@ fun CounterScreen() {
                 }
             }
         }
-
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Button(
+                onClick = {
+                    randomMode = !randomMode
+                }
+            ) {
+                Text(
+                    if (randomMode) {
+                        "Tryb: losowo"
+                    } else {
+                        "Tryb: po kolei"
+                    }
+                )
+            }
+        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -111,7 +135,11 @@ fun CounterScreen() {
         ) {
             Button(
                 onClick = {
-                    currentIndex = (currentIndex - 1 + flashcards.size) % flashcards.size
+                    currentIndex = if (randomMode) {
+                        Random.nextInt(flashcards.size)
+                    } else {
+                        (currentIndex - 1) % flashcards.size
+                    }
                     showAnswer = false
 
                 }
@@ -119,9 +147,14 @@ fun CounterScreen() {
                 Text("Poprzednie")
             }
             //Spacer(modifier = Modifier.size())
+
             Button(
                 onClick = {
-                    currentIndex = (currentIndex + 1) % flashcards.size
+                    currentIndex = if (randomMode) {
+                        Random.nextInt(flashcards.size)
+                    } else {
+                        (currentIndex + 1) % flashcards.size
+                    }
                     showAnswer = false
 
                 }
