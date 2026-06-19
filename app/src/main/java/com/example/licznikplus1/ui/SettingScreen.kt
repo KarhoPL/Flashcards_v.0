@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.licznikplus1.data.FlashcardField
+import com.example.licznikplus1.ui.components.LanguageSelector
 
 @Composable
 fun SettingsScreen(
@@ -40,54 +41,10 @@ fun SettingsScreen(
             text = "Język pytania",
             fontSize = 24.sp
         )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Button(
-                onClick = {
-                    onQuestionFieldChange(FlashcardField.CHINESE)
-                }
-            ) {
-                Text(
-                    if (questionField == FlashcardField.CHINESE) {
-                        "✓中文"
-                    } else {
-                        "中文"
-                    }
-                )
-            }
-
-            Button(
-                onClick = {
-                    onQuestionFieldChange(FlashcardField.PINYIN)
-                }
-            ) {
-                Text(
-                    if (questionField == FlashcardField.PINYIN) {
-                        "✓Pinyin"
-                    } else {
-                        "Pinyin"
-                    }
-                )
-            }
-
-            Button(
-                onClick = {
-                    onQuestionFieldChange(FlashcardField.POLISH)
-                }
-            ) {
-                Text(
-                    if (questionField == FlashcardField.POLISH) {
-                        "✓PL"
-                    } else {
-                        "PL"
-                    }
-                )
-            }
-        }
+        LanguageSelector(
+            selectedField = questionField,
+            onFieldSelected = onQuestionFieldChange
+        )
         Button(
             onClick = {
                 onRandomModeChange(!randomMode)
