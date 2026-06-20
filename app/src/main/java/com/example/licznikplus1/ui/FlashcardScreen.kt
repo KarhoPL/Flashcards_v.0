@@ -29,6 +29,7 @@ import com.example.licznikplus1.data.loadFlashcards
 import com.example.licznikplus1.ui.components.NavigationButtons
 import kotlin.random.Random
 import androidx.compose.runtime.remember
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import com.example.licznikplus1.audio.TextToSpeechManager
 import com.example.licznikplus1.data.hasAudio
 
@@ -127,18 +128,29 @@ fun FlashcardScreen(
                 }
             }
         }
-
-        NavigationButtons(
-            onPreviousClick = {
-                currentIndex = (currentIndex - 1 + flashcards.size) % flashcards.size
-                showAnswer = false
-            },
-            onNextClick = {
-                currentIndex = (currentIndex + 1) % flashcards.size
-                showAnswer = false
-            },
-        )
-
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            NavigationButtons(
+                onAgainClick = {
+                    currentIndex = (currentIndex + 1) % flashcards.size
+                    showAnswer = false
+                },
+                onHardClick = {
+                    currentIndex = (currentIndex + 1) % flashcards.size
+                    showAnswer = false
+                },
+                onGoodClick = {
+                    currentIndex = (currentIndex + 1) % flashcards.size
+                    showAnswer = false
+                },
+                onEasyClick = {
+                    currentIndex = (currentIndex + 1) % flashcards.size
+                    showAnswer = false
+                }
+            )
+        }
     }
 
 

@@ -1,20 +1,24 @@
 [
   {
+    "id": "hello",
     "polish": "dzień dobry",
     "pinyin": "nǐ hǎo",
     "chinese": "你好"
   },
   {
+    "id": "thenkyou",
     "polish": "dziękuję",
     "pinyin": "xièxie",
     "chinese": "谢谢"
   },
   {
+    "id": "byebye",
     "polish": "do widzenia",
     "pinyin": "zàijiàn",
     "chinese": "再见"
   },
   {
+    "id": "cat",
     "polish": "kot",
     "pinyin": "māo",
     "chinese": "猫"

@@ -12,26 +12,24 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun NavigationButtons(
-    onPreviousClick: () -> Unit,
-    onNextClick: () -> Unit,
+    onAgainClick: () -> Unit,
+    onHardClick: () -> Unit,
+    onGoodClick: () -> Unit,
+    onEasyClick: () -> Unit,
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 30.dp, vertical = 16.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
+    Button(onClick = onAgainClick) {
+        Text("Źle")
+    }
 
-        Button(
-            onClick = onPreviousClick
-        ) {
-            Text("Poprzednie")
-        }
+    Button(onClick = onHardClick) {
+        Text("Trudne")
+    }
 
-        Button(
-            onClick = onNextClick
-        ) {
-            Text("Następne")
-        }
+    Button(onClick = onGoodClick) {
+        Text("Dobrze")
+    }
+
+    Button(onClick = onEasyClick) {
+        Text("Łatwe")
     }
 }

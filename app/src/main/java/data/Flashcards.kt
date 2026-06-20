@@ -11,6 +11,7 @@ enum class FlashcardField {
 
 @Serializable
 data class Flashcard(
+    val id: String,
     val polish: String,
     val pinyin: String,
     val chinese: String
