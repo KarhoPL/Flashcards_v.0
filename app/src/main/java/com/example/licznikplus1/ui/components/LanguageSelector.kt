@@ -43,6 +43,13 @@ fun LanguageSelector(
             selectedField = selectedField,
             onFieldSelected = onFieldSelected
         )
+
+        LanguageButton(
+            label = "🔊",
+            field = FlashcardField.AUDIO,
+            selectedField = selectedField,
+            onFieldSelected = onFieldSelected
+        )
     }
 }
 

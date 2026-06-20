@@ -1,5 +1,6 @@
 package com.example.licznikplus1.ui
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -52,6 +54,13 @@ fun FlashcardScreen(
     fun playAudio() {
         textToSpeechManager.speak(currentCard.chinese)
     }
+    LaunchedEffect(currentIndex, questionField) {
+        if (questionField == FlashcardField.AUDIO) {
+            playAudio()
+        }
+    }
+
+
     var showAnswer by rememberSaveable {
         mutableStateOf(false)
     }
@@ -62,7 +71,10 @@ fun FlashcardScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .clickable {
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
                 if (!showAnswer) {
                     showAnswer = true
 

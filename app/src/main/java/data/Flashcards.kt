@@ -21,7 +21,7 @@ fun Flashcard.getField(field: FlashcardField): String {
         FlashcardField.POLISH -> polish
         FlashcardField.PINYIN -> pinyin
         FlashcardField.CHINESE -> chinese
-        FlashcardField.AUDIO -> ""
+        FlashcardField.AUDIO -> "🔊"
     }
 }
 
