@@ -90,20 +90,6 @@ fun FlashcardScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.End
-        ) {
-            Button(
-                onClick = {
-                    navController.navigate("settings")
-                }
-            ) {
-                Text("⚙")
-            }
-        }
 
         Box(
             modifier = Modifier.weight(1f),

@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.example.licznikplus1.data.FlashcardField
+import com.example.licznikplus1.ui.HomeScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,9 +31,11 @@ class MainActivity : ComponentActivity() {
 
             NavHost(
                 navController = navController,
-                startDestination = "flashcards"
+                startDestination = "home"
             ) {
-
+                composable("home") {
+                    HomeScreen(navController)
+                }
                 composable("flashcards") {
                     FlashcardScreen(
                         navController = navController,
