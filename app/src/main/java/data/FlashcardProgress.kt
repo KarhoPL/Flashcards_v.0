@@ -1,4 +1,4 @@
-package data
+package com.example.licznikplus1.data
 
 data class FlashcardProgress(
     val cardId: String,

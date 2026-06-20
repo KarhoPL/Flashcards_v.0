@@ -1,4 +1,4 @@
-package data
+package com.example.licznikplus1.data
 
 data class ReviewEvent(
     val cardId: String,
