@@ -55,14 +55,27 @@ fun FlashcardScreen(
     }
     val flashcards = loadFlashcards(context)
 
-    var currentIndex by rememberSaveable {
-        mutableStateOf(0)
+    val sessionQueue = remember {
+        mutableStateListOf<Int>().apply {
+            addAll(flashcards.indices)
+        }
     }
     val reviewEvents = remember {
         mutableStateListOf<ReviewEvent>()
     }
-    val currentCard = flashcards[currentIndex]
 
+    if (sessionQueue.isEmpty()) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text("Sesja zakończona")
+        }
+        return
+    }
+
+    val currentCard = flashcards[sessionQueue.first()]
     var showAnswer by rememberSaveable {
         mutableStateOf(false)
     }
@@ -89,7 +102,12 @@ fun FlashcardScreen(
             )
         )
 
-        currentIndex = (currentIndex + 1) % flashcards.size
+        val answeredCardIndex = sessionQueue.removeAt(0)
+
+        if (rating == ReviewRating.AGAIN) {
+            sessionQueue.add(answeredCardIndex)
+        }
+
         showAnswer = false
 
         coroutineScope.launch {
@@ -101,8 +119,8 @@ fun FlashcardScreen(
     fun playAudio() {
         textToSpeechManager.speak(currentCard.chinese)
     }
-    LaunchedEffect(currentIndex, questionField) {
-        if (questionField == FlashcardField.AUDIO) {
+    LaunchedEffect(sessionQueue.firstOrNull(), questionField) {
+        if (questionField == FlashcardField.AUDIO && sessionQueue.isNotEmpty()) {
             playAudio()
         }
     }
