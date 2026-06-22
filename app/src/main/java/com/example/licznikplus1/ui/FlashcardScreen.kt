@@ -48,6 +48,7 @@ fun FlashcardScreen(
     val reviewEventDao = remember {
         database.reviewEventDao()
     }
+
     val coroutineScope = rememberCoroutineScope()
     val textToSpeechManager = remember {
         TextToSpeechManager(context)
@@ -64,6 +65,12 @@ fun FlashcardScreen(
 
     var showAnswer by rememberSaveable {
         mutableStateOf(false)
+    }
+    var reviewCount by rememberSaveable {
+        mutableStateOf(0)
+    }
+    LaunchedEffect(Unit) {
+        reviewCount = reviewEventDao.getCount()
     }
 
     fun answer(rating: ReviewRating) {
@@ -82,12 +89,13 @@ fun FlashcardScreen(
             )
         )
 
-        coroutineScope.launch {
-            reviewEventDao.insert(event)
-        }
-
         currentIndex = (currentIndex + 1) % flashcards.size
         showAnswer = false
+
+        coroutineScope.launch {
+            reviewEventDao.insert(event)
+            reviewCount = reviewEventDao.getCount()
+        }
     }
 
     fun playAudio() {
@@ -188,6 +196,8 @@ fun FlashcardScreen(
         Text("Dobrze: ${reviewEvents.count { it.rating == ReviewRating.GOOD }}")
 
         Text("Łatwe: ${reviewEvents.count { it.rating == ReviewRating.EASY }}")
+
+        Text("Odpowiedzi: $reviewCount")
     }
 
 

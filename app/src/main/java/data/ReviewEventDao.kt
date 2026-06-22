@@ -12,4 +12,7 @@ interface ReviewEventDao {
 
     @Query("SELECT * FROM review_events")
     suspend fun getAll(): List<ReviewEventEntity>
+
+    @Query("SELECT COUNT(*) FROM review_events")
+    suspend fun getCount(): Int
 }

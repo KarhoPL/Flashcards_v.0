@@ -6,7 +6,7 @@
     "chinese": "你好"
   },
   {
-    "id": "thenkyou",
+    "id": "thankyou",
     "polish": "dziękuję",
     "pinyin": "xièxie",
     "chinese": "谢谢"
@@ -22,5 +22,101 @@
     "polish": "kot",
     "pinyin": "māo",
     "chinese": "猫"
+  },
+  {
+    "id": "dog",
+    "polish": "pies",
+    "pinyin": "gǒu",
+    "chinese": "狗"
+  },
+  {
+    "id": "person",
+    "polish": "człowiek",
+    "pinyin": "rén",
+    "chinese": "人"
+  },
+  {
+    "id": "water",
+    "polish": "woda",
+    "pinyin": "shuǐ",
+    "chinese": "水"
+  },
+  {
+    "id": "tea",
+    "polish": "herbata",
+    "pinyin": "chá",
+    "chinese": "茶"
+  },
+  {
+    "id": "rice",
+    "polish": "ryż",
+    "pinyin": "mǐfàn",
+    "chinese": "米饭"
+  },
+  {
+    "id": "eat",
+    "polish": "jeść",
+    "pinyin": "chī",
+    "chinese": "吃"
+  },
+  {
+    "id": "drink",
+    "polish": "pić",
+    "pinyin": "hē",
+    "chinese": "喝"
+  },
+  {
+    "id": "yes",
+    "polish": "tak",
+    "pinyin": "shì",
+    "chinese": "是"
+  },
+  {
+    "id": "no",
+    "polish": "nie",
+    "pinyin": "bù",
+    "chinese": "不"
+  },
+  {
+    "id": "good",
+    "polish": "dobry",
+    "pinyin": "hǎo",
+    "chinese": "好"
+  },
+  {
+    "id": "big",
+    "polish": "duży",
+    "pinyin": "dà",
+    "chinese": "大"
+  },
+  {
+    "id": "small",
+    "polish": "mały",
+    "pinyin": "xiǎo",
+    "chinese": "小"
+  },
+  {
+    "id": "one",
+    "polish": "jeden",
+    "pinyin": "yī",
+    "chinese": "一"
+  },
+  {
+    "id": "two",
+    "polish": "dwa",
+    "pinyin": "èr",
+    "chinese": "二"
+  },
+  {
+    "id": "three",
+    "polish": "trzy",
+    "pinyin": "sān",
+    "chinese": "三"
+  },
+  {
+    "id": "friend",
+    "polish": "przyjaciel",
+    "pinyin": "péngyou",
+    "chinese": "朋友"
   }
 ]
