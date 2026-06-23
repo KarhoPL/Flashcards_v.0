@@ -28,6 +28,7 @@ import com.example.licznikplus1.data.FlashcardField
 import com.example.licznikplus1.data.ReviewEvent
 import com.example.licznikplus1.data.ReviewEventEntity
 import com.example.licznikplus1.data.ReviewRating
+import com.example.licznikplus1.data.SessionMode
 import com.example.licznikplus1.data.getField
 import com.example.licznikplus1.data.hasAudio
 import com.example.licznikplus1.data.loadFlashcards
@@ -39,8 +40,9 @@ import kotlinx.coroutines.launch
 fun FlashcardScreen(
     navController: NavController,
     questionField: FlashcardField,
-    autoPlayAudio: Boolean
-) {
+    autoPlayAudio: Boolean,
+    sessionMode: SessionMode
+){
     val context = LocalContext.current
     val database = remember {
         DatabaseProvider.getDatabase(context)
@@ -94,13 +96,16 @@ fun FlashcardScreen(
             rating = rating
         )
 
-        reviewEvents.add(
-            ReviewEvent(
-                cardId = event.cardId,
-                timestamp = event.timestamp,
-                rating = event.rating
+        if (sessionMode == SessionMode.TESTING) {
+
+            reviewEvents.add(
+                ReviewEvent(
+                    cardId = event.cardId,
+                    timestamp = event.timestamp,
+                    rating = event.rating
+                )
             )
-        )
+        }
 
         val answeredCardIndex = sessionQueue.removeAt(0)
 
@@ -110,9 +115,12 @@ fun FlashcardScreen(
 
         showAnswer = false
 
-        coroutineScope.launch {
-            reviewEventDao.insert(event)
-            reviewCount = reviewEventDao.getCount()
+        if (sessionMode == SessionMode.TESTING) {
+
+            coroutineScope.launch {
+                reviewEventDao.insert(event)
+                reviewCount = reviewEventDao.getCount()
+            }
         }
     }
 

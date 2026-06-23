@@ -36,12 +36,20 @@ fun HomeScreen(
                 .fillMaxWidth()
                 .padding(top = 32.dp),
             onClick = {
-                navController.navigate("flashcards")
+                navController.navigate("learning")            }
+        ) {
+            Text("Tryb nauki")
+        }
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            onClick = {
+                navController.navigate("testing")
             }
         ) {
-            Text("Nauka")
+            Text("Tryb testu")
         }
-
         Button(
             modifier = Modifier
                 .fillMaxWidth()

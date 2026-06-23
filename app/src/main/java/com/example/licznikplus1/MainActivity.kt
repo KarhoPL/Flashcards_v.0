@@ -15,6 +15,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.example.licznikplus1.data.FlashcardField
 import com.example.licznikplus1.ui.HomeScreen
+import com.example.licznikplus1.data.SessionMode
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,11 +37,21 @@ class MainActivity : ComponentActivity() {
                 composable("home") {
                     HomeScreen(navController)
                 }
-                composable("flashcards") {
+                composable("learning") {
                     FlashcardScreen(
                         navController = navController,
                         questionField = questionField,
-                        autoPlayAudio = autoPlayAudio
+                        autoPlayAudio = autoPlayAudio,
+                        sessionMode = SessionMode.LEARNING
+                    )
+                }
+
+                composable("testing") {
+                    FlashcardScreen(
+                        navController = navController,
+                        questionField = questionField,
+                        autoPlayAudio = autoPlayAudio,
+                        sessionMode = SessionMode.TESTING
                     )
                 }
 
