@@ -4,10 +4,15 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [ReviewEventEntity::class],
-    version = 1
+    entities = [
+        ReviewEventEntity::class,
+        FlashcardProgressEntity::class
+    ],
+    version = 2
 )
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun reviewEventDao(): ReviewEventDao
+
+    abstract fun flashcardProgressDao(): FlashcardProgressDao
 }

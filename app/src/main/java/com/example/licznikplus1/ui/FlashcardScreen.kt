@@ -25,6 +25,7 @@ import androidx.navigation.NavController
 import com.example.licznikplus1.audio.TextToSpeechManager
 import com.example.licznikplus1.data.DatabaseProvider
 import com.example.licznikplus1.data.FlashcardField
+import com.example.licznikplus1.data.FlashcardProgressEntity
 import com.example.licznikplus1.data.ReviewEvent
 import com.example.licznikplus1.data.ReviewEventEntity
 import com.example.licznikplus1.data.ReviewRating
@@ -50,7 +51,9 @@ fun FlashcardScreen(
     val reviewEventDao = remember {
         database.reviewEventDao()
     }
-
+    val flashcardProgressDao = remember {
+        database.flashcardProgressDao()
+    }
     val coroutineScope = rememberCoroutineScope()
     val textToSpeechManager = remember {
         TextToSpeechManager(context)
@@ -118,7 +121,18 @@ fun FlashcardScreen(
         if (sessionMode == SessionMode.TESTING) {
 
             coroutineScope.launch {
+
                 reviewEventDao.insert(event)
+
+                val progress =
+                    flashcardProgressDao.getByCardId(currentCard.id)
+                        ?: FlashcardProgressEntity(
+                            cardId = currentCard.id,
+                            introducedAt = System.currentTimeMillis()
+                        )
+
+                flashcardProgressDao.insert(progress)
+
                 reviewCount = reviewEventDao.getCount()
             }
         }
