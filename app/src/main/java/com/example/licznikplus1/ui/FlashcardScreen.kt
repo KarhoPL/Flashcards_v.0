@@ -65,6 +65,12 @@ fun FlashcardScreen(
             addAll(flashcards.indices)
         }
     }
+    val cardsFailedThisSession = remember {
+        mutableSetOf<String>()
+    }
+    val lastRatingForCard = remember {
+        mutableMapOf<String, ReviewRating>()
+    }
     val reviewEvents = remember {
         mutableStateListOf<ReviewEvent>()
     }
@@ -93,12 +99,16 @@ fun FlashcardScreen(
 
     fun answer(rating: ReviewRating) {
 
+        if (rating == ReviewRating.AGAIN) {
+            cardsFailedThisSession.add(currentCard.id)
+        }
+
         val event = ReviewEventEntity(
             cardId = currentCard.id,
             timestamp = System.currentTimeMillis(),
             rating = rating
         )
-
+        lastRatingForCard[currentCard.id] = rating
         if (sessionMode == SessionMode.TESTING) {
 
             reviewEvents.add(
@@ -131,7 +141,27 @@ fun FlashcardScreen(
                             introducedAt = System.currentTimeMillis()
                         )
 
-                flashcardProgressDao.insert(progress)
+                val now = System.currentTimeMillis()
+
+                val newIntervalHours =
+                    if (cardsFailedThisSession.contains(currentCard.id)) {
+                        8
+                    } else {
+                        when (rating) {
+                            ReviewRating.HARD -> 8
+                            ReviewRating.GOOD -> 12
+                            ReviewRating.EASY -> progress.intervalHours + 12
+                            ReviewRating.AGAIN -> progress.intervalHours
+                        }
+                    }
+
+                val updatedProgress = progress.copy(
+                    intervalHours = newIntervalHours,
+                    nextReviewDate = now + newIntervalHours * 60L * 60L * 1000L,
+                    lastReviewedAt = now
+                )
+
+                flashcardProgressDao.insert(updatedProgress)
 
                 reviewCount = reviewEventDao.getCount()
             }

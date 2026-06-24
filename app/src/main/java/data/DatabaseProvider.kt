@@ -15,7 +15,9 @@ object DatabaseProvider {
                 context.applicationContext,
                 AppDatabase::class.java,
                 "licznikplus1_database"
-            ).build()
+            )
+                .fallbackToDestructiveMigration()
+                .build()
 
             INSTANCE = instance
 

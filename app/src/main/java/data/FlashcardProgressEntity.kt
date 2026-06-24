@@ -12,7 +12,7 @@ data class FlashcardProgressEntity(
     val introducedAt: Long? = null,
 
     val nextReviewDate: Long = 0L,
-    val intervalDays: Int = 0,
+    val intervalHours: Int = 0,
 
     val lastReviewedAt: Long? = null
 )
