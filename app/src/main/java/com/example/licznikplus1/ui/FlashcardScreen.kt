@@ -29,12 +29,14 @@ import com.example.licznikplus1.data.FlashcardProgressEntity
 import com.example.licznikplus1.data.ReviewEvent
 import com.example.licznikplus1.data.ReviewEventEntity
 import com.example.licznikplus1.data.ReviewRating
+import com.example.licznikplus1.data.SessionBuilder
+import com.example.licznikplus1.data.SessionCard
 import com.example.licznikplus1.data.SessionMode
 import com.example.licznikplus1.data.getField
-import com.example.licznikplus1.data.hasAudio
 import com.example.licznikplus1.data.loadFlashcards
 import com.example.licznikplus1.ui.components.NavigationButtons
 import kotlinx.coroutines.launch
+
 
 @Composable
 
@@ -42,7 +44,9 @@ fun FlashcardScreen(
     navController: NavController,
     questionField: FlashcardField,
     autoPlayAudio: Boolean,
-    sessionMode: SessionMode
+    sessionMode: SessionMode,
+    newCardsPerDay: Int,
+    learningCardsCount: Int
 ){
     val context = LocalContext.current
     val database = remember {
@@ -61,10 +65,9 @@ fun FlashcardScreen(
     val flashcards = loadFlashcards(context)
 
     val sessionQueue = remember {
-        mutableStateListOf<Int>().apply {
-            addAll(flashcards.indices)
-        }
+        mutableStateListOf<SessionCard>()
     }
+
     val cardsFailedThisSession = remember {
         mutableSetOf<String>()
     }
@@ -73,6 +76,29 @@ fun FlashcardScreen(
     }
     val reviewEvents = remember {
         mutableStateListOf<ReviewEvent>()
+    }
+    LaunchedEffect(sessionMode) {
+
+        if (sessionMode == SessionMode.LEARNING) {
+
+            sessionQueue.clear()
+
+            sessionQueue.addAll(
+                SessionBuilder.buildLearningSession(
+                    flashcardProgressDao = flashcardProgressDao,
+                    learningCardsCount = learningCardsCount
+                )
+            )
+        } else if (sessionMode == SessionMode.TESTING) {
+            sessionQueue.clear()
+            sessionQueue.addAll(
+                SessionBuilder.buildTestingSession(
+                    flashcards = flashcards,
+                    flashcardProgressDao = flashcardProgressDao,
+                    newCardsPerDay = newCardsPerDay
+                )
+            )
+        }
     }
 
     if (sessionQueue.isEmpty()) {
@@ -86,7 +112,11 @@ fun FlashcardScreen(
         return
     }
 
-    val currentCard = flashcards[sessionQueue.first()]
+    val currentSessionCard = sessionQueue.first()
+
+    val currentCard = flashcards.first {
+        it.id == currentSessionCard.cardId
+    }
     var showAnswer by rememberSaveable {
         mutableStateOf(false)
     }
@@ -120,10 +150,10 @@ fun FlashcardScreen(
             )
         }
 
-        val answeredCardIndex = sessionQueue.removeAt(0)
+        val answeredCard = sessionQueue.removeAt(0)
 
         if (rating == ReviewRating.AGAIN) {
-            sessionQueue.add(answeredCardIndex)
+            sessionQueue.add(answeredCard)
         }
 
         showAnswer = false
@@ -189,15 +219,19 @@ fun FlashcardScreen(
                 indication = null
             ) {
                 if (!showAnswer) {
+
                     showAnswer = true
 
-                    if (autoPlayAudio && questionField.hasAudio()) {
+                    // Automatically play pronunciation after revealing the answer.
+                    if (autoPlayAudio) {
                         playAudio()
                     }
+
                 } else {
-                    if (questionField.hasAudio()) {
-                        playAudio()
-                    }
+
+                    // Replay pronunciation on demand.
+                    playAudio()
+
                 }
             },
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -272,8 +306,6 @@ fun FlashcardScreen(
 
 
 }
-
-
 
 //@Preview(showBackground = true)
 //@Composable

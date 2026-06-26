@@ -1,122 +1,170 @@
 [
   {
     "id": "hello",
-    "polish": "dzień dobry",
-    "pinyin": "nǐ hǎo",
+    "polish": "cześć; dzień dobry",
+    "pinyin": "nǐhǎo",
     "chinese": "你好"
   },
   {
-    "id": "thankyou",
-    "polish": "dziękuję",
-    "pinyin": "xièxie",
-    "chinese": "谢谢"
+    "id": "i_me",
+    "polish": "ja; mnie",
+    "pinyin": "wǒ",
+    "chinese": "我"
   },
   {
-    "id": "byebye",
-    "polish": "do widzenia",
-    "pinyin": "zàijiàn",
-    "chinese": "再见"
+    "id": "called",
+    "polish": "nazywać się",
+    "pinyin": "jiào",
+    "chinese": "叫"
   },
   {
-    "id": "cat",
-    "polish": "kot",
-    "pinyin": "māo",
-    "chinese": "猫"
-  },
-  {
-    "id": "dog",
-    "polish": "pies",
-    "pinyin": "gǒu",
-    "chinese": "狗"
+    "id": "usa",
+    "polish": "Stany Zjednoczone",
+    "pinyin": "Měiguó",
+    "chinese": "美国"
   },
   {
     "id": "person",
-    "polish": "człowiek",
+    "polish": "człowiek; osoba",
     "pinyin": "rén",
     "chinese": "人"
   },
   {
-    "id": "water",
-    "polish": "woda",
-    "pinyin": "shuǐ",
-    "chinese": "水"
-  },
-  {
-    "id": "tea",
-    "polish": "herbata",
-    "pinyin": "chá",
-    "chinese": "茶"
-  },
-  {
-    "id": "rice",
-    "polish": "ryż",
-    "pinyin": "mǐfàn",
-    "chinese": "米饭"
-  },
-  {
-    "id": "eat",
-    "polish": "jeść",
-    "pinyin": "chī",
-    "chinese": "吃"
-  },
-  {
-    "id": "drink",
-    "polish": "pić",
-    "pinyin": "hē",
-    "chinese": "喝"
-  },
-  {
-    "id": "yes",
-    "polish": "tak",
+    "id": "to_be",
+    "polish": "być",
     "pinyin": "shì",
     "chinese": "是"
   },
   {
-    "id": "no",
+    "id": "student",
+    "polish": "uczeń; student",
+    "pinyin": "xuéshēng",
+    "chinese": "学生"
+  },
+  {
+    "id": "teacher",
+    "polish": "nauczyciel",
+    "pinyin": "lǎoshī",
+    "chinese": "老师"
+  },
+  {
+    "id": "china",
+    "polish": "Chiny",
+    "pinyin": "Zhōngguó",
+    "chinese": "中国"
+  },
+  {
+    "id": "you",
+    "polish": "ty",
+    "pinyin": "nǐ",
+    "chinese": "你"
+  },
+  {
+    "id": "he",
+    "polish": "on",
+    "pinyin": "tā",
+    "chinese": "他"
+  },
+  {
+    "id": "not",
     "polish": "nie",
     "pinyin": "bù",
     "chinese": "不"
   },
   {
-    "id": "good",
-    "polish": "dobry",
-    "pinyin": "hǎo",
-    "chinese": "好"
+    "id": "doctor",
+    "polish": "lekarz",
+    "pinyin": "yīshēng",
+    "chinese": "医生"
   },
   {
-    "id": "big",
-    "polish": "duży",
-    "pinyin": "dà",
-    "chinese": "大"
+    "id": "she",
+    "polish": "ona",
+    "pinyin": "tā",
+    "chinese": "她"
   },
   {
-    "id": "small",
-    "polish": "mały",
-    "pinyin": "xiǎo",
-    "chinese": "小"
+    "id": "goodbye",
+    "polish": "do widzenia",
+    "pinyin": "zàijiàn",
+    "chinese": "再见"
   },
   {
-    "id": "one",
-    "polish": "jeden",
-    "pinyin": "yī",
-    "chinese": "一"
+    "id": "classmate",
+    "polish": "kolega z klasy",
+    "pinyin": "tóngxué",
+    "chinese": "同学"
   },
   {
-    "id": "two",
-    "polish": "dwa",
-    "pinyin": "èr",
-    "chinese": "二"
-  },
-  {
-    "id": "three",
-    "polish": "trzy",
-    "pinyin": "sān",
-    "chinese": "三"
+    "id": "plural_marker",
+    "polish": "końcówka liczby mnogiej",
+    "pinyin": "men",
+    "chinese": "们"
   },
   {
     "id": "friend",
-    "polish": "przyjaciel",
+    "polish": "przyjaciel; znajomy",
     "pinyin": "péngyou",
     "chinese": "朋友"
+  },
+  {
+    "id": "boyfriend",
+    "polish": "chłopak",
+    "pinyin": "nánpéngyou",
+    "chinese": "男朋友"
+  },
+  {
+    "id": "girlfriend",
+    "polish": "dziewczyna",
+    "pinyin": "nǚpéngyou",
+    "chinese": "女朋友"
+  },
+  {
+    "id": "this",
+    "polish": "to; ten; ta",
+    "pinyin": "zhè",
+    "chinese": "这"
+  },
+  {
+    "id": "coworker",
+    "polish": "współpracownik",
+    "pinyin": "tóngshì",
+    "chinese": "同事"
+  },
+  {
+    "id": "boss",
+    "polish": "szef",
+    "pinyin": "lǎobǎn",
+    "chinese": "老板"
+  },
+  {
+    "id": "that",
+    "polish": "tamto; tamten",
+    "pinyin": "nà",
+    "chinese": "那"
+  },
+  {
+    "id": "online_friend",
+    "polish": "znajomy z internetu",
+    "pinyin": "wǎngyǒu",
+    "chinese": "网友"
+  },
+  {
+    "id": "neighbor",
+    "polish": "sąsiad",
+    "pinyin": "línjū",
+    "chinese": "邻居"
+  },
+  {
+    "id": "who",
+    "polish": "kto",
+    "pinyin": "shéi",
+    "chinese": "谁"
+  },
+  {
+    "id": "roommate",
+    "polish": "współlokator",
+    "pinyin": "shìyǒu",
+    "chinese": "室友"
   }
 ]
