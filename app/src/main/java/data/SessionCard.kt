@@ -1,5 +1,6 @@
 package com.example.licznikplus1.data
 
 data class SessionCard(
-    val cardId: String
+    val cardId: String,
+    val questionField: FlashcardField
 )

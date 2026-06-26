@@ -1,7 +1,9 @@
 package com.example.licznikplus1.data
 
 data class AppSettings(
-    val questionField: FlashcardField = FlashcardField.CHINESE,
+    val askChinese: Boolean = true,
+    val askPolish: Boolean = true,
+    val askAudio: Boolean = true,
     val autoPlayAudio: Boolean = true,
     val newCardsPerDay: Int = 5,
 

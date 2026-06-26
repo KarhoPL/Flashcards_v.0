@@ -10,6 +10,10 @@ data class ReviewEventEntity(
     val id: Long = 0,
 
     val cardId: String,
+
+    val questionField: FlashcardField,
+
     val timestamp: Long,
+
     val rating: ReviewRating
 )

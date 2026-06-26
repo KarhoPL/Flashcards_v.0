@@ -42,11 +42,13 @@ import kotlinx.coroutines.launch
 
 fun FlashcardScreen(
     navController: NavController,
-    questionField: FlashcardField,
     autoPlayAudio: Boolean,
     sessionMode: SessionMode,
     newCardsPerDay: Int,
-    learningCardsCount: Int
+    learningCardsCount: Int,
+    askChinese: Boolean,
+    askPolish: Boolean,
+    askAudio: Boolean,
 ){
     val context = LocalContext.current
     val database = remember {
@@ -86,7 +88,10 @@ fun FlashcardScreen(
             sessionQueue.addAll(
                 SessionBuilder.buildLearningSession(
                     flashcardProgressDao = flashcardProgressDao,
-                    learningCardsCount = learningCardsCount
+                    learningCardsCount = learningCardsCount,
+                    askChinese = askChinese,
+                    askPolish = askPolish,
+                    askAudio = askAudio
                 )
             )
         } else if (sessionMode == SessionMode.TESTING) {
@@ -95,7 +100,10 @@ fun FlashcardScreen(
                 SessionBuilder.buildTestingSession(
                     flashcards = flashcards,
                     flashcardProgressDao = flashcardProgressDao,
-                    newCardsPerDay = newCardsPerDay
+                    newCardsPerDay = newCardsPerDay,
+                    askChinese = askChinese,
+                    askPolish = askPolish,
+                    askAudio = askAudio
                 )
             )
         }
@@ -117,6 +125,7 @@ fun FlashcardScreen(
     val currentCard = flashcards.first {
         it.id == currentSessionCard.cardId
     }
+    val currentQuestionField = currentSessionCard.questionField
     var showAnswer by rememberSaveable {
         mutableStateOf(false)
     }
@@ -135,6 +144,7 @@ fun FlashcardScreen(
 
         val event = ReviewEventEntity(
             cardId = currentCard.id,
+            questionField  = currentQuestionField,
             timestamp = System.currentTimeMillis(),
             rating = rating
         )
@@ -165,11 +175,14 @@ fun FlashcardScreen(
                 reviewEventDao.insert(event)
 
                 val progress =
-                    flashcardProgressDao.getByCardId(currentCard.id)
-                        ?: FlashcardProgressEntity(
-                            cardId = currentCard.id,
-                            introducedAt = System.currentTimeMillis()
-                        )
+                    flashcardProgressDao.getByCardId(
+                        cardId = currentCard.id,
+                        questionField  = currentQuestionField
+                    ) ?: FlashcardProgressEntity(
+                        cardId = currentCard.id,
+                        questionField  = currentQuestionField,
+                        introducedAt = System.currentTimeMillis()
+                    )
 
                 val now = System.currentTimeMillis()
 
@@ -201,15 +214,15 @@ fun FlashcardScreen(
     fun playAudio() {
         textToSpeechManager.speak(currentCard.chinese)
     }
-    LaunchedEffect(sessionQueue.firstOrNull(), questionField) {
-        if (questionField == FlashcardField.AUDIO && sessionQueue.isNotEmpty()) {
+    LaunchedEffect(sessionQueue.firstOrNull(), currentQuestionField) {
+        if (currentQuestionField == FlashcardField.AUDIO && sessionQueue.isNotEmpty()) {
             playAudio()
         }
     }
 
 
     val answerFields = FlashcardField.values().filter {
-        it != questionField
+        it != currentQuestionField
     }
     Column(
         modifier = Modifier
@@ -247,7 +260,7 @@ fun FlashcardScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = currentCard.getField(questionField),
+                    text = currentCard.getField(currentQuestionField),
                     fontSize = 48.sp
                 )
             }

@@ -11,8 +11,16 @@ interface FlashcardProgressDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(progress: FlashcardProgressEntity)
 
-    @Query("SELECT * FROM flashcard_progress WHERE cardId = :cardId")
-    suspend fun getByCardId(cardId: String): FlashcardProgressEntity?
+    @Query("""
+    SELECT *
+    FROM flashcard_progress
+    WHERE cardId = :cardId
+      AND questionField = :questionField
+""")
+    suspend fun getByCardId(
+        cardId: String,
+        questionField: FlashcardField
+    ): FlashcardProgressEntity?
 
     @Query("SELECT * FROM flashcard_progress")
     suspend fun getAll(): List<FlashcardProgressEntity>
@@ -32,7 +40,7 @@ interface FlashcardProgressDao {
     suspend fun countIntroducedToday(startOfDay: Long): Int
 
     @Query("""
-    SELECT cardId
+    SELECT DISTINCT cardId
     FROM flashcard_progress
 """)
     suspend fun getIntroducedCardIds(): List<String>

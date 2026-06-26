@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -19,8 +18,14 @@ class SettingsDataStore(
 
     companion object {
 
-        private val QUESTION_FIELD =
-            stringPreferencesKey("question_field")
+        private val ASK_CHINESE =
+            booleanPreferencesKey("ask_chinese")
+
+        private val ASK_POLISH =
+            booleanPreferencesKey("ask_polish")
+
+        private val ASK_AUDIO =
+            booleanPreferencesKey("ask_audio")
 
         private val AUTO_PLAY_AUDIO =
             booleanPreferencesKey("auto_play_audio")
@@ -36,11 +41,14 @@ class SettingsDataStore(
         context.dataStore.data.map { preferences ->
 
             AppSettings(
-                questionField =
-                FlashcardField.valueOf(
-                    preferences[QUESTION_FIELD]
-                        ?: FlashcardField.CHINESE.name
-                ),
+                askChinese =
+                preferences[ASK_CHINESE] ?: true,
+
+                askPolish =
+                preferences[ASK_POLISH] ?: true,
+
+                askAudio =
+                preferences[ASK_AUDIO] ?: true,
 
                 autoPlayAudio =
                 preferences[AUTO_PLAY_AUDIO] ?: true,
@@ -54,11 +62,21 @@ class SettingsDataStore(
 
         }
 
-    suspend fun saveQuestionField(
-        field: FlashcardField
-    ) {
+    suspend fun saveAskChinese(enabled: Boolean) {
         context.dataStore.edit { preferences ->
-            preferences[QUESTION_FIELD] = field.name
+            preferences[ASK_CHINESE] = enabled
+        }
+    }
+
+    suspend fun saveAskPolish(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[ASK_POLISH] = enabled
+        }
+    }
+
+    suspend fun saveAskAudio(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[ASK_AUDIO] = enabled
         }
     }
 

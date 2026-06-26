@@ -11,14 +11,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.licznikplus1.data.FlashcardField
-import com.example.licznikplus1.ui.components.LanguageSelector
 
 @Composable
 fun SettingsScreen(
     navController: NavController,
-    questionField: FlashcardField,
-    onQuestionFieldChange: (FlashcardField) -> Unit,
+    askChinese: Boolean,
+    onAskChineseChange: (Boolean) -> Unit,
+    askPolish: Boolean,
+    onAskPolishChange: (Boolean) -> Unit,
+    askAudio: Boolean,
+    onAskAudioChange: (Boolean) -> Unit,
     autoPlayAudio: Boolean,
     onAutoPlayAudioChange: (Boolean) -> Unit,
     newCardsPerDay: Int,
@@ -38,14 +40,47 @@ fun SettingsScreen(
         ) {
             Text("← Wróć")
         }
-        Text(
-            text = "Język pytania",
-            fontSize = 24.sp
-        )
-        LanguageSelector(
-            selectedField = questionField,
-            onFieldSelected = onQuestionFieldChange
-        )
+        Button(
+            onClick = {
+                onAskChineseChange(!askChinese)
+            }
+        ) {
+            Text(
+                if (askChinese) {
+                    "Chiński: włączony"
+                } else {
+                    "Chiński: wyłączony"
+                }
+            )
+        }
+
+        Button(
+            onClick = {
+                onAskPolishChange(!askPolish)
+            }
+        ) {
+            Text(
+                if (askPolish) {
+                    "Polski: włączony"
+                } else {
+                    "Polski: wyłączony"
+                }
+            )
+        }
+
+        Button(
+            onClick = {
+                onAskAudioChange(!askAudio)
+            }
+        ) {
+            Text(
+                if (askAudio) {
+                    "Audio: włączone"
+                } else {
+                    "Audio: wyłączone"
+                }
+            )
+        }
         Button(
             onClick = {
                 onAutoPlayAudioChange(!autoPlayAudio)

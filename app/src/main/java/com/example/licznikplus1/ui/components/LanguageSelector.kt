@@ -31,13 +31,6 @@ fun LanguageSelector(
         )
 
         LanguageButton(
-            label = "Pinyin",
-            field = FlashcardField.PINYIN,
-            selectedField = selectedField,
-            onFieldSelected = onFieldSelected
-        )
-
-        LanguageButton(
             label = "PL",
             field = FlashcardField.POLISH,
             selectedField = selectedField,

@@ -44,32 +44,50 @@ class MainActivity : ComponentActivity() {
                 composable("learning") {
                     FlashcardScreen(
                         navController = navController,
-                        questionField = settings.questionField,
                         autoPlayAudio = settings.autoPlayAudio,
                         sessionMode = SessionMode.LEARNING,
                         newCardsPerDay = settings.newCardsPerDay,
-                        learningCardsCount = settings.learningCardsCount
+                        learningCardsCount = settings.learningCardsCount,
+                        askChinese = settings.askChinese,
+                        askPolish = settings.askPolish,
+                        askAudio = settings.askAudio,
                     )
                 }
 
                 composable("testing") {
                     FlashcardScreen(
                         navController = navController,
-                        questionField = settings.questionField,
                         autoPlayAudio = settings.autoPlayAudio,
                         sessionMode = SessionMode.TESTING,
                         newCardsPerDay = settings.newCardsPerDay,
-                        learningCardsCount = settings.learningCardsCount
+                        learningCardsCount = settings.learningCardsCount,
+                        askChinese = settings.askChinese,
+                        askPolish = settings.askPolish,
+                        askAudio = settings.askAudio,
                     )
                 }
 
                 composable("settings") {
                     SettingsScreen(
                         navController = navController,
-                        questionField = settings.questionField,
-                        onQuestionFieldChange = {
+                        askChinese = settings.askChinese,
+                        onAskChineseChange = {
                             coroutineScope.launch {
-                                settingsDataStore.saveQuestionField(it)
+                                settingsDataStore.saveAskChinese(it)
+                            }
+                        },
+
+                        askPolish = settings.askPolish,
+                        onAskPolishChange = {
+                            coroutineScope.launch {
+                                settingsDataStore.saveAskPolish(it)
+                            }
+                        },
+
+                        askAudio = settings.askAudio,
+                        onAskAudioChange = {
+                            coroutineScope.launch {
+                                settingsDataStore.saveAskAudio(it)
                             }
                         },
                         autoPlayAudio = settings.autoPlayAudio,

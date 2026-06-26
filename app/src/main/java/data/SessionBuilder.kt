@@ -7,42 +7,121 @@ class SessionBuilder {
         suspend fun buildTestingSession(
             flashcards: List<Flashcard>,
             flashcardProgressDao: FlashcardProgressDao,
-            newCardsPerDay: Int
+            newCardsPerDay: Int,
+            askChinese: Boolean,
+            askPolish: Boolean,
+            askAudio: Boolean
         ): List<SessionCard> {
 
             val now = System.currentTimeMillis()
 
             val dueCards = flashcardProgressDao
                 .getDueCards(now)
-                .map { SessionCard(it.cardId) }
+                .map {
+                    SessionCard(
+                        cardId = it.cardId,
+                        questionField = it.questionField
+                    )
+                }
 
             val introducedToday = flashcardProgressDao
                 .getIntroducedToday(startOfToday())
 
+            val introducedTodayCount = introducedToday
+                .map { it.cardId }
+                .distinct()
+                .size
+
             val remainingNewCards =
-                (newCardsPerDay - introducedToday.size).coerceAtLeast(0)
+                (newCardsPerDay - introducedTodayCount).coerceAtLeast(0)
 
-            val introducedCardIds =
-                flashcardProgressDao.getIntroducedCardIds().toSet()
+            val introducedProgress =
+                flashcardProgressDao.getAll()
 
-            val newCards = flashcards
-                .filter { it.id !in introducedCardIds }
-                .take(remainingNewCards)
-                .map { SessionCard(it.id) }
+            val introducedPairs = introducedProgress.map {
+                it.cardId to it.questionField
+            }.toSet()
 
-            return (dueCards + newCards)
-                .distinctBy { it.cardId }
+            val newCards = mutableListOf<SessionCard>()
+
+            for (flashcard in flashcards) {
+
+                val cardsForWord = mutableListOf<SessionCard>()
+
+                if (
+                    askChinese &&
+                    (flashcard.id to FlashcardField.CHINESE) !in introducedPairs
+                ) {
+                    cardsForWord.add(
+                        SessionCard(
+                            cardId = flashcard.id,
+                            questionField = FlashcardField.CHINESE
+                        )
+                    )
+                }
+
+                if (
+                    askPolish &&
+                    (flashcard.id to FlashcardField.POLISH) !in introducedPairs
+                ) {
+                    cardsForWord.add(
+                        SessionCard(
+                            cardId = flashcard.id,
+                            questionField = FlashcardField.POLISH
+                        )
+                    )
+                }
+
+                if (
+                    askAudio &&
+                    (flashcard.id to FlashcardField.AUDIO) !in introducedPairs
+                ) {
+                    cardsForWord.add(
+                        SessionCard(
+                            cardId = flashcard.id,
+                            questionField = FlashcardField.AUDIO
+                        )
+                    )
+                }
+
+                if (cardsForWord.isNotEmpty()) {
+                    newCards.addAll(cardsForWord)
+                }
+
+                if (newCards.map { it.cardId }.distinct().size >= remainingNewCards) {
+                    break
+                }
+            }
+
+
+            return (dueCards + newCards).shuffled()
         }
 
         suspend fun buildLearningSession(
             flashcardProgressDao: FlashcardProgressDao,
-            learningCardsCount: Int
+            learningCardsCount: Int,
+            askChinese: Boolean,
+            askPolish: Boolean,
+            askAudio: Boolean
         ): List<SessionCard> {
 
             return flashcardProgressDao
                 .getOrderedByNextReviewDate()
+                .filter {
+                    when (it.questionField) {
+                        FlashcardField.CHINESE -> askChinese
+                        FlashcardField.POLISH -> askPolish
+                        FlashcardField.AUDIO -> askAudio
+                        FlashcardField.PINYIN -> false
+                    }
+                }
                 .take(learningCardsCount)
-                .map { SessionCard(it.cardId) }
+                .map {
+                    SessionCard(
+                        cardId = it.cardId,
+                        questionField = it.questionField
+                    )
+                }
         }
     }
 }
