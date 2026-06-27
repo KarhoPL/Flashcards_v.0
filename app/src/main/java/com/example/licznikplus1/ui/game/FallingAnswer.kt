@@ -1,43 +1,56 @@
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.offset
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.IntOffset
 import com.example.licznikplus1.ui.game.AnswerChip
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun FallingWord(
     text: String,
-    screenWidth: Int,
-    screenHeight: Int,
+    x: Int,
+    startY: Float,
+    endY: Float,
     startDelay: Long,
+    isCorrect: Boolean,
     onClick: () -> Unit,
-    onFinished: () -> Unit,
-    roundId: Long
+    onFinished: () -> Unit
 ){
-    val answerWidthPx = (screenWidth * 0.55f).toInt()
-
-        val x = remember(screenWidth) {
-            (32..(screenWidth - answerWidthPx - 32)).random()
-        }
-
     val y = remember {
-        Animatable(-200f)
+        Animatable(startY)
+    }
+    var wrongAnswer by remember {
+        mutableStateOf(false)
     }
 
+    val cardColor by animateColorAsState(
+        targetValue =
+        if (wrongAnswer)
+            Color(0xFFFFCDD2)
+        else
+            MaterialTheme.colorScheme.surface,
+        label = ""
+    )
     LaunchedEffect(Unit) {
         delay(startDelay)
         y.animateTo(
-            targetValue = screenHeight.toFloat() + 150f,
+            targetValue = endY,
             animationSpec = tween(
-                durationMillis = 8000,
+                durationMillis = 4500,
                 easing = LinearEasing
             )
         )
@@ -46,6 +59,7 @@ fun FallingWord(
 
     AnswerChip(
         text = text,
+        containerColor = cardColor,
         modifier = Modifier
             .offset {
                 IntOffset(
@@ -54,8 +68,22 @@ fun FallingWord(
                 )
             }
             .clickable {
-                println("CLICK")
-                onClick()
+
+                if (isCorrect) {
+                    onClick()
+                } else {
+
+                    wrongAnswer = true
+
+                    kotlinx.coroutines.CoroutineScope(
+                        kotlinx.coroutines.Dispatchers.Main
+                    ).launch {
+
+                        delay(250)
+
+                        onClick()
+                    }
+                }
             }
     )
 }

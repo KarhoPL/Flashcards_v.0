@@ -3,6 +3,7 @@ package com.example.licznikplus1.ui.game
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -10,16 +11,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.licznikplus1.audio.TextToSpeechManager
 import com.example.licznikplus1.data.DatabaseProvider
 import com.example.licznikplus1.data.FlashcardField
 import com.example.licznikplus1.data.GameBuilder
+import com.example.licznikplus1.data.GamePreferences
 import com.example.licznikplus1.data.getField
 import com.example.licznikplus1.data.loadFlashcards
 import kotlinx.coroutines.delay
@@ -33,16 +32,7 @@ fun GameScreen(
     navController: NavController
 ) {
     val context = LocalContext.current
-    val configuration = LocalConfiguration.current
-    val density = LocalDensity.current
 
-    val screenWidth = with(density) {
-        configuration.screenWidthDp.dp.roundToPx()
-    }
-
-    val screenHeight = with(density) {
-        configuration.screenHeightDp.dp.roundToPx()
-    }
     val textToSpeechManager = remember {
         TextToSpeechManager(context)
     }
@@ -54,7 +44,9 @@ fun GameScreen(
     val database = remember {
         DatabaseProvider.getDatabase(context)
     }
-
+    val gamePreferences = remember {
+        GamePreferences(context)
+    }
     val flashcardProgressDao = remember {
         database.flashcardProgressDao()
     }
@@ -74,18 +66,15 @@ fun GameScreen(
     var score by remember {
         mutableStateOf(0)
     }
-    var highScore by remember {
-        mutableStateOf(0)
-    }
+    val highScore by gamePreferences.highScore.collectAsState(
+        initial = 0
+    )
     var lives by remember {
         mutableStateOf(3)
     }
 
     var gameOver by remember {
         mutableStateOf(false)
-    }
-    var roundId by remember {
-        mutableStateOf(0L)
     }
 
     fun nextQuestion() {
@@ -94,7 +83,6 @@ fun GameScreen(
             return
 
         }
-        roundId++
 
         currentQuestion =
             GameBuilder.getRandomQuestion(learnedCards)
@@ -111,8 +99,6 @@ fun GameScreen(
             )
 
             println("Build answers: ${System.currentTimeMillis() - start} ms")
-
-            visibleAnswers.clear()
 
             visibleAnswers.clear()
             visibleAnswers.addAll(answers)
@@ -154,21 +140,10 @@ fun GameScreen(
             it.flashcard.getField(it.questionField)
         } ?: ""
 
-        QuestionCard(
-            text = questionText,
-            maxFontSize =
-            if (currentQuestion?.questionField == FlashcardField.CHINESE)
-                64.sp
-            else
-                48.sp
-        )
-
-        FallingAnswersLayer(
+        GamePlayArea(
+            question = questionText,
+            questionFontSize = 48.sp,
             visibleAnswers = visibleAnswers,
-            roundId = roundId,
-            screenWidth = screenWidth,
-            screenHeight = screenHeight,
-
             onAnswerClick = { answer ->
 
                 if (answer.isCorrect) {
@@ -176,7 +151,11 @@ fun GameScreen(
                     score++
 
                     if (score > highScore) {
-                        highScore = score
+
+                        coroutineScope.launch {
+
+                            gamePreferences.saveHighScore(score)
+                        }
                     }
 
                 } else {
@@ -189,7 +168,6 @@ fun GameScreen(
                     nextQuestion()
                 }
             },
-
             onAnswerFinished = { answer ->
 
                 if (answer.isCorrect) {
@@ -205,5 +183,21 @@ fun GameScreen(
             }
         )
 
+    }
+    if (gameOver) {
+
+        GameOverDialog(
+            score = score,
+            highScore = highScore,
+            onRestart = {
+                score = 0
+                lives = 3
+                gameOver = false
+                nextQuestion()
+            },
+            onBackToMenu = {
+                navController.popBackStack()
+            }
+        )
     }
 }

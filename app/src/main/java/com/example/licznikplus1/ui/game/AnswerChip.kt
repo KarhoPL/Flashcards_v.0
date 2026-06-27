@@ -7,6 +7,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -17,7 +18,8 @@ import com.example.licznikplus1.ui.components.AutoResizeText
 fun AnswerChip(
     text: String,
     modifier: Modifier = Modifier,
-    maxFontSize: TextUnit = 20.sp
+    maxFontSize: TextUnit = 20.sp,
+    containerColor: Color = MaterialTheme.colorScheme.surface
 ) {
 
     Card(
@@ -27,7 +29,7 @@ fun AnswerChip(
             defaultElevation = 10.dp
         ),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = containerColor
         )
     ) {
 
