@@ -55,6 +55,16 @@ fun HomeScreen(
                 .fillMaxWidth()
                 .padding(top = 16.dp),
             onClick = {
+                navController.navigate("game")
+            }
+        ) {
+            Text("Gra")
+        }
+        Button(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            onClick = {
                 navController.navigate("settings")
             }
         ) {

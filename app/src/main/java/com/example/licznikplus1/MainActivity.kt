@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.licznikplus1.data.SessionMode
 import com.example.licznikplus1.data.SettingsDataStore
 import com.example.licznikplus1.ui.FlashcardScreen
+import com.example.licznikplus1.ui.game.GameScreen
 import com.example.licznikplus1.ui.HomeScreen
 import com.example.licznikplus1.ui.SettingsScreen
 import kotlinx.coroutines.launch
@@ -108,6 +109,11 @@ class MainActivity : ComponentActivity() {
                                 settingsDataStore.saveLearningCardsCount(it)
                             }
                         }
+                    )
+                }
+                composable("game") {
+                    GameScreen(
+                        navController = navController
                     )
                 }
             }
