@@ -1,19 +1,15 @@
 package com.example.licznikplus1.ui.game
 
-import FallingWord
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -50,9 +46,11 @@ fun GameScreen(
     val textToSpeechManager = remember {
         TextToSpeechManager(context)
     }
+    val coroutineScope = rememberCoroutineScope()
 
-    val flashcards = loadFlashcards(context)
-
+    val flashcards = remember {
+        loadFlashcards(context)
+    }
     val database = remember {
         DatabaseProvider.getDatabase(context)
     }
@@ -89,10 +87,12 @@ fun GameScreen(
     var roundId by remember {
         mutableStateOf(0L)
     }
+
     fun nextQuestion() {
 
         if (gameOver) {
             return
+
         }
         roundId++
 
@@ -102,25 +102,25 @@ fun GameScreen(
         currentQuestion?.let {
 
             println(it.questionField)
+
+            val start = System.currentTimeMillis()
+
             answers = GameBuilder.buildAnswers(
                 question = it,
                 flashcards = flashcards
             )
+
+            println("Build answers: ${System.currentTimeMillis() - start} ms")
+
             visibleAnswers.clear()
 
-            kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
+            visibleAnswers.clear()
+            visibleAnswers.addAll(answers)
 
-                answers.forEach { answer ->
-
-                    visibleAnswers.add(answer)
-
-                    delay(700)
-                }
-            }
             if (it.questionField == FlashcardField.AUDIO) {
                 println("AUDIO: ${it.flashcard.chinese}")
 
-                kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
+                coroutineScope.launch {
                     delay(300)
                     textToSpeechManager.speak(it.flashcard.chinese)
                 }
@@ -163,63 +163,47 @@ fun GameScreen(
                 48.sp
         )
 
-        Box(
-            modifier = Modifier.fillMaxSize()
-        ) {
+        FallingAnswersLayer(
+            visibleAnswers = visibleAnswers,
+            roundId = roundId,
+            screenWidth = screenWidth,
+            screenHeight = screenHeight,
 
-            val currentRound = roundId
+            onAnswerClick = { answer ->
 
-            visibleAnswers.forEach { answer ->
+                if (answer.isCorrect) {
 
-                key(roundId, answer.id) {
+                    score++
 
-                    FallingWord(
-                        text = answer.text,
-                        screenWidth = screenWidth,
-                        screenHeight = screenHeight,
-                        roundId = roundId,
-                        onClick = {
+                    if (score > highScore) {
+                        highScore = score
+                    }
 
-                            if (answer.isCorrect) {
+                } else {
+                    lives--
+                }
 
-                                score++
+                if (lives <= 0) {
+                    gameOver = true
+                } else {
+                    nextQuestion()
+                }
+            },
 
-                                if (score > highScore) {
-                                    highScore = score
-                                }
+            onAnswerFinished = { answer ->
 
-                            } else {
-                                lives--
-                            }
+                if (answer.isCorrect) {
 
-                            if (lives <= 0) {
-                                gameOver = true
-                            } else {
-                                nextQuestion()
-                            }
-                        },
+                    lives--
 
-                        onFinished = {
-
-                            if (currentRound != roundId) {
-                                return@FallingWord
-                            }
-
-                            if (answer.isCorrect) {
-
-                                lives--
-
-                                if (lives <= 0) {
-                                    gameOver = true
-                                } else {
-                                    nextQuestion()
-                                }
-                            }
-                        }
-                    )
+                    if (lives <= 0) {
+                        gameOver = true
+                    } else {
+                        nextQuestion()
+                    }
                 }
             }
-        }
+        )
 
     }
 }

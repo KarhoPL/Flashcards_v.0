@@ -23,7 +23,9 @@ fun AutoResizeText(
     textAlign: TextAlign = TextAlign.Start
 ) {
 
-    BoxWithConstraints(modifier) {
+    BoxWithConstraints(
+        modifier = modifier
+    ) {
 
         val density = LocalDensity.current
         val textMeasurer = rememberTextMeasurer()
@@ -32,11 +34,17 @@ fun AutoResizeText(
             maxWidth.roundToPx()
         }
 
-        val fontSize = remember(text, maxWidthPx) {
+        val fontSize = remember(
+            text,
+            maxWidthPx,
+            maxFontSize,
+            minFontSize,
+            maxLines
+        ) {
 
             var size = maxFontSize
 
-            while (size.value > minFontSize.value) {
+            while (size > minFontSize) {
 
                 val result = textMeasurer.measure(
                     text = AnnotatedString(text),
@@ -59,7 +67,7 @@ fun AutoResizeText(
 
         Text(
             text = text,
-            modifier = modifier,
+            modifier = Modifier,
             fontSize = fontSize,
             maxLines = maxLines,
             textAlign = textAlign
