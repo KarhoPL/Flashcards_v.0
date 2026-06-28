@@ -38,6 +38,16 @@ class SettingsDataStore(
 
         private val ONE_HAND_MODE =
             booleanPreferencesKey("one_hand_mode")
+
+        private val REVIEW_NOTIFICATIONS_ENABLED =
+            booleanPreferencesKey("review_notification_enabled")
+
+        private val REVIEW_NOTIFICATION_THRESHOLD =
+            intPreferencesKey("review_notification_threshold")
+
+        private val REVIEW_NOTIFICATION_SENT =
+            booleanPreferencesKey("review_notification_sent")
+
     }
 
     val settings: Flow<AppSettings> =
@@ -64,7 +74,20 @@ class SettingsDataStore(
 
                 oneHandMode =
                 preferences[ONE_HAND_MODE] ?: false,
+
+                reviewNotificationsEnabled =
+                preferences[REVIEW_NOTIFICATIONS_ENABLED] ?: true,
+
+                reviewNotificationThreshold =
+                preferences[REVIEW_NOTIFICATION_THRESHOLD] ?: 10,
             )
+
+        }
+
+    val reviewNotificationSent: Flow<Boolean> =
+        context.dataStore.data.map { preferences ->
+
+            preferences[REVIEW_NOTIFICATION_SENT] ?: false
 
         }
 
@@ -117,4 +140,28 @@ class SettingsDataStore(
             preferences[ONE_HAND_MODE] = enabled
         }
     }
+
+    suspend fun saveReviewNotificationsEnabled(
+        enabled: Boolean
+    ) {
+        context.dataStore.edit { preferences ->
+            preferences[REVIEW_NOTIFICATIONS_ENABLED] = enabled
+        }
+    }
+
+    suspend fun saveReviewNotificationThreshold(
+        value: Int
+    ) {
+        context.dataStore.edit { preferences ->
+            preferences[REVIEW_NOTIFICATION_THRESHOLD] = value
+        }
+    }
+    suspend fun saveReviewNotificationSent(
+        sent: Boolean
+    ) {
+        context.dataStore.edit { preferences ->
+            preferences[REVIEW_NOTIFICATION_SENT] = sent
+        }
+    }
+
 }

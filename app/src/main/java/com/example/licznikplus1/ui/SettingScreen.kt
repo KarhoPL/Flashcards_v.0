@@ -39,7 +39,11 @@ fun SettingsScreen(
     learningCardsCount: Int,
     onLearningCardsCountChange: (Int) -> Unit,
     oneHandMode: Boolean,
-    onOneHandModeChange: (Boolean) -> Unit
+    onOneHandModeChange: (Boolean) -> Unit,
+    reviewNotificationsEnabled: Boolean,
+    onReviewNotificationsEnabledChange: (Boolean) -> Unit,
+    reviewNotificationThreshold: Int,
+    onReviewNotificationThresholdChange: (Int) -> Unit
 ) {
 
     Surface(
@@ -240,6 +244,9 @@ fun SettingsScreen(
                 }
 
                 Spacer(Modifier.height(24.dp))
+                Divider()
+                Spacer(Modifier.height(24.dp))
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -253,7 +260,63 @@ fun SettingsScreen(
                         onCheckedChange = onOneHandModeChange
                     )
                 }
+                Spacer(Modifier.height(24.dp))
+                Divider()
+                Spacer(Modifier.height(24.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
 
+                    Text("Włącz powaidomienia")
+
+                    Switch(
+                        checked = reviewNotificationsEnabled,
+                        onCheckedChange = onReviewNotificationsEnabledChange
+                    )
+                }
+                if (reviewNotificationsEnabled) {
+                    Text(
+                        text = "Liczba kart do wysłania powiadomienia",
+                        fontSize = 14.sp
+                    )
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        Button(
+                            onClick = {
+                                if (reviewNotificationThreshold > 0) {
+                                    onReviewNotificationThresholdChange(reviewNotificationThreshold - 1)
+                                }
+                            }
+                        ) {
+                            Text("-")
+                        }
+                        Box(
+                            modifier = Modifier
+                                .width(60.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "$reviewNotificationThreshold",
+                                fontSize = 28.sp
+                            )
+                        }
+
+
+                        Button(
+                            onClick = {
+                                onReviewNotificationThresholdChange(reviewNotificationThreshold + 1)
+                            }
+                        ) {
+                            Text("+")
+                        }
+
+                    }
+                }
             }
 
 

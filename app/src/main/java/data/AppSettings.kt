@@ -7,6 +7,8 @@ data class AppSettings(
     val autoPlayAudio: Boolean = true,
     val newCardsPerDay: Int = 5,
     val oneHandMode: Boolean = false,
+    val reviewNotificationsEnabled: Boolean = false,
+    val reviewNotificationThreshold: Int = 10,
 
     // Number of cards shown in free learning mode.
     val learningCardsCount: Int = 10

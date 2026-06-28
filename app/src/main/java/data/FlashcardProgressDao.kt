@@ -60,5 +60,13 @@ interface FlashcardProgressDao {
     ORDER BY nextReviewDate ASC
 """)
     suspend fun getOrderedByNextReviewDate(): List<FlashcardProgressEntity>
+
+    @Query("""
+SELECT COUNT(*)
+FROM flashcard_progress
+WHERE nextReviewDate <= :now
+""")
+    suspend fun getDueCardsCount(now: Long): Int
+    
 }
 
