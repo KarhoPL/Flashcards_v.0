@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,75 +20,81 @@ import androidx.navigation.NavController
 fun HomeScreen(
     navController: NavController
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
     ) {
-
-        Text(
-            text = "Fiszki",
-            fontSize = 36.sp
-        )
-
-        Button(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 32.dp),
-            onClick = {
-                navController.navigate("learning")            }
+                .fillMaxSize()
+                .padding(32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Text("Tryb nauki")
-        }
-        Button(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
-            onClick = {
-                navController.navigate("testing")
+
+            Text(
+                text = "Fiszki",
+                fontSize = 36.sp
+            )
+
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 32.dp),
+                onClick = {
+                    navController.navigate("learning")
+                }
+            ) {
+                Text("Tryb nauki")
             }
-        ) {
-            Text("Tryb testu")
-        }
-        Button(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
-            onClick = {
-                navController.navigate("game")
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                onClick = {
+                    navController.navigate("testing")
+                }
+            ) {
+                Text("Tryb testu")
             }
-        ) {
-            Text("Gra")
-        }
-        Button(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
-            onClick = {
-                navController.navigate("settings")
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                onClick = {
+                    navController.navigate("game")
+                }
+            ) {
+                Text("Gra")
             }
-        ) {
-            Text("Ustawienia")
-        }
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                onClick = {
+                    navController.navigate("settings")
+                }
+            ) {
+                Text("Ustawienia")
+            }
 
-        Button(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
-            onClick = { }
-        ) {
-            Text("Statystyki (wkrótce)")
-        }
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                onClick = { }
+            ) {
+                Text("Statystyki (wkrótce)")
+            }
 
-        Button(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
-            onClick = { }
-        ) {
-            Text("Fiszki (wkrótce)")
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                onClick = { }
+            ) {
+                Text("Fiszki (wkrótce)")
+            }
         }
     }
 }

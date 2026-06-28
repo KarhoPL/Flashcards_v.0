@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,201 +37,229 @@ fun SettingsScreen(
     newCardsPerDay: Int,
     onNewCardsPerDayChange: (Int) -> Unit,
     learningCardsCount: Int,
-    onLearningCardsCountChange: (Int) -> Unit
+    onLearningCardsCountChange: (Int) -> Unit,
+    oneHandMode: Boolean,
+    onOneHandModeChange: (Boolean) -> Unit
 ) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
     ) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
 
-        item {
-
-            Button(
-                onClick = {
-                    navController.popBackStack()
-                }
-            ) {
-                Text("← Wróć")
-            }
-
-            Spacer(Modifier.height(24.dp))
-
-            Text(
-                text = "Język pytań",
-                fontSize = 22.sp
-            )
-
-            Spacer(Modifier.height(12.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                Text("Chiński")
-
-                Switch(
-                    checked = askChinese,
-                    onCheckedChange = onAskChineseChange
-                )
-            }
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                Text("Polski")
-
-                Switch(
-                    checked = askPolish,
-                    onCheckedChange = onAskPolishChange
-                )
-            }
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                Text("Audio")
-
-                Switch(
-                    checked = askAudio,
-                    onCheckedChange = onAskAudioChange
-                )
-            }
-
-            Spacer(Modifier.height(16.dp))
-
-            Divider()
-
-            Spacer(Modifier.height(16.dp))
-
-            Text(
-                text = "Audio",
-                fontSize = 22.sp
-            )
-
-            Spacer(Modifier.height(12.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                Text("Czytaj po odkryciu odpowiedzi")
-
-                Switch(
-                    checked = autoPlayAudio,
-                    onCheckedChange = onAutoPlayAudioChange
-                )
-            }
-
-            Spacer(Modifier.height(16.dp))
-
-            Divider()
-
-            Spacer(Modifier.height(16.dp))
-
-            Text(
-                text = "Sesja",
-                fontSize = 22.sp
-            )
-
-            Spacer(Modifier.height(16.dp))
-
-            Text(
-                text = "Nowe karty dziennie",
-                fontSize = 20.sp
-            )
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            item {
 
                 Button(
                     onClick = {
-                        if (newCardsPerDay > 0) {
-                            onNewCardsPerDayChange(newCardsPerDay - 1)
-                        }
+                        navController.popBackStack()
                     }
                 ) {
-                    Text("-")
+                    Text("← Wróć")
                 }
-                Box(
-                    modifier = Modifier
-                        .width(60.dp),
-                    contentAlignment = Alignment.Center
+
+                Spacer(Modifier.height(24.dp))
+
+                Text(
+                    text = "Język pytań",
+                    fontSize = 22.sp
+                )
+
+                Spacer(Modifier.height(12.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = "$newCardsPerDay",
-                        fontSize = 28.sp
+
+                    Text("Chiński")
+
+                    Switch(
+                        checked = askChinese,
+                        onCheckedChange = onAskChineseChange
                     )
                 }
 
-
-                Button(
-                    onClick = {
-                        onNewCardsPerDayChange(newCardsPerDay + 1)
-                    }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("+")
-                }
 
-            }
+                    Text("Polski")
 
-            Spacer(Modifier.height(24.dp))
-
-            Text(
-                text = "Karty w trybie nauki",
-                fontSize = 20.sp
-            )
-
-
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            )  {
-
-                Button(
-                    onClick = {
-                        if (learningCardsCount > 0) {
-                            onLearningCardsCountChange(
-                                learningCardsCount - 1
-                            )
-                        }
-                    }
-                ) {
-                    Text("-")
-                }
-                Box(
-                    modifier = Modifier
-                        .width(60.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "$learningCardsCount",
-                        fontSize = 28.sp
+                    Switch(
+                        checked = askPolish,
+                        onCheckedChange = onAskPolishChange
                     )
                 }
-                Button(
-                    onClick = {
-                        onLearningCardsCountChange(
-                            learningCardsCount + 1
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    Text("Audio")
+
+                    Switch(
+                        checked = askAudio,
+                        onCheckedChange = onAskAudioChange
+                    )
+                }
+
+                Spacer(Modifier.height(16.dp))
+
+                Divider()
+
+                Spacer(Modifier.height(16.dp))
+
+                Text(
+                    text = "Audio",
+                    fontSize = 22.sp
+                )
+
+                Spacer(Modifier.height(12.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    Text("Czytaj po odkryciu odpowiedzi")
+
+                    Switch(
+                        checked = autoPlayAudio,
+                        onCheckedChange = onAutoPlayAudioChange
+                    )
+                }
+
+                Spacer(Modifier.height(16.dp))
+
+                Divider()
+
+                Spacer(Modifier.height(16.dp))
+
+                Text(
+                    text = "Sesja",
+                    fontSize = 22.sp
+                )
+
+                Spacer(Modifier.height(16.dp))
+
+                Text(
+                    text = "Nowe karty dziennie",
+                    fontSize = 20.sp
+                )
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    Button(
+                        onClick = {
+                            if (newCardsPerDay > 0) {
+                                onNewCardsPerDayChange(newCardsPerDay - 1)
+                            }
+                        }
+                    ) {
+                        Text("-")
+                    }
+                    Box(
+                        modifier = Modifier
+                            .width(60.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "$newCardsPerDay",
+                            fontSize = 28.sp
                         )
                     }
+
+
+                    Button(
+                        onClick = {
+                            onNewCardsPerDayChange(newCardsPerDay + 1)
+                        }
+                    ) {
+                        Text("+")
+                    }
+
+                }
+
+                Spacer(Modifier.height(24.dp))
+
+                Text(
+                    text = "Karty w trybie nauki",
+                    fontSize = 20.sp
+                )
+
+
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("+")
+
+                    Button(
+                        onClick = {
+                            if (learningCardsCount > 0) {
+                                onLearningCardsCountChange(
+                                    learningCardsCount - 1
+                                )
+                            }
+                        }
+                    ) {
+                        Text("-")
+                    }
+                    Box(
+                        modifier = Modifier
+                            .width(60.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "$learningCardsCount",
+                            fontSize = 28.sp
+                        )
+                    }
+                    Button(
+                        onClick = {
+                            onLearningCardsCountChange(
+                                learningCardsCount + 1
+                            )
+                        }
+                    ) {
+                        Text("+")
+                    }
+
+                }
+
+                Spacer(Modifier.height(24.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    Text("Tryb jednej ręki")
+
+                    Switch(
+                        checked = oneHandMode,
+                        onCheckedChange = onOneHandModeChange
+                    )
                 }
 
             }
 
+
         }
+
+
+
     }
 }

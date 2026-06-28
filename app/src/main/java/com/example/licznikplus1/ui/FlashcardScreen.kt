@@ -7,6 +7,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.licznikplus1.audio.TextToSpeechManager
@@ -49,6 +55,7 @@ fun FlashcardScreen(
     askChinese: Boolean,
     askPolish: Boolean,
     askAudio: Boolean,
+    oneHandMode:Boolean
 ){
     val context = LocalContext.current
     val database = remember {
@@ -224,100 +231,163 @@ fun FlashcardScreen(
     val answerFields = FlashcardField.values().filter {
         it != currentQuestionField
     }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
-            ) {
-                if (!showAnswer) {
 
-                    showAnswer = true
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) {
+                    if (!showAnswer) {
 
-                    // Automatically play pronunciation after revealing the answer.
-                    if (autoPlayAudio) {
+                        showAnswer = true
+
+                        // Automatically play pronunciation after revealing the answer.
+                        if (autoPlayAudio) {
+                            playAudio()
+                        }
+
+                    } else {
+
+                        // Replay pronunciation on demand.
                         playAudio()
+
+                    }
+                },
+            horizontalAlignment = Alignment.CenterHorizontally,
+
+            ) {
+
+            Box(
+                modifier = Modifier.weight(1f),
+                contentAlignment = Alignment.BottomCenter,
+
+                ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = currentCard.getField(currentQuestionField),
+                        fontSize = 48.sp
+                    )
+                }
+            }
+            Box(
+                modifier = Modifier.weight(1f),
+                contentAlignment = Alignment.TopCenter,
+
+                ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+
+                    if (showAnswer) {
+
+                        answerFields.forEach { field ->
+
+                            Text(
+                                text = currentCard.getField(field),
+                                fontSize = 24.sp
+                            )
+                        }
+                    }
+                }
+            }
+            if (showAnswer) {
+                if (oneHandMode) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 15.dp, vertical = 10.dp)
+                            .height(300.dp)
+                        ,
+                        horizontalAlignment = Alignment.End,
+                        verticalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        NavigationButtons(
+                            oneHandMode = oneHandMode,
+                            onAgainClick = {
+                                answer(ReviewRating.AGAIN)
+                            },
+                            onHardClick = {
+                                answer(ReviewRating.HARD)
+                            },
+                            onGoodClick = {
+                                answer(ReviewRating.GOOD)
+                            },
+                            onEasyClick = {
+                                answer(ReviewRating.EASY)
+                            }
+                        )
                     }
 
                 } else {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(100.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically
 
-                    // Replay pronunciation on demand.
-                    playAudio()
-
-                }
-            },
-        horizontalAlignment = Alignment.CenterHorizontally,
-
-        ) {
-
-        Box(
-            modifier = Modifier.weight(1f),
-            contentAlignment = Alignment.BottomCenter,
-
-            ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = currentCard.getField(currentQuestionField),
-                    fontSize = 48.sp
-                )
-            }
-        }
-        Box(
-            modifier = Modifier.weight(1f),
-            contentAlignment = Alignment.TopCenter,
-
-            ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-
-                if (showAnswer) {
-
-                    answerFields.forEach { field ->
-
-                        Text(
-                            text = currentCard.getField(field),
-                            fontSize = 24.sp
+                    ) {
+                        NavigationButtons(
+                            oneHandMode = oneHandMode,
+                            onAgainClick = {
+                                answer(ReviewRating.AGAIN)
+                            },
+                            onHardClick = {
+                                answer(ReviewRating.HARD)
+                            },
+                            onGoodClick = {
+                                answer(ReviewRating.GOOD)
+                            },
+                            onEasyClick = {
+                                answer(ReviewRating.EASY)
+                            }
                         )
                     }
+
+                }
+            } else {
+                if (oneHandMode) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 15.dp, vertical = 10.dp)
+                            .height(300.dp),
+                        horizontalAlignment = Alignment.End
+                    ){}
+                }else{
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(100.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {}
                 }
             }
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            NavigationButtons(
-                onAgainClick = {
-                    answer(ReviewRating.AGAIN)
-                },
-                onHardClick = {
-                    answer(ReviewRating.HARD)
-                },
-                onGoodClick = {
-                    answer(ReviewRating.GOOD)
-                },
-                onEasyClick = {
-                    answer(ReviewRating.EASY)
-                }
-            )
-        }
-        Text("Źle: ${reviewEvents.count { it.rating == ReviewRating.AGAIN }}")
 
-        Text("Trudne: ${reviewEvents.count { it.rating == ReviewRating.HARD }}")
+/*
+Text("Źle: ${reviewEvents.count { it.rating == ReviewRating.AGAIN }}")
 
-        Text("Dobrze: ${reviewEvents.count { it.rating == ReviewRating.GOOD }}")
+Text("Trudne: ${reviewEvents.count { it.rating == ReviewRating.HARD }}")
 
-        Text("Łatwe: ${reviewEvents.count { it.rating == ReviewRating.EASY }}")
+Text("Okej: ${reviewEvents.count { it.rating == ReviewRating.GOOD }}")
 
-        Text("Odpowiedzi: $reviewCount")
-    }
+Text("Łatwe: ${reviewEvents.count { it.rating == ReviewRating.EASY }}")
 
+Text("Odpowiedzi: $reviewCount")
 
+ */
+}
+
+}
 }
 
 //@Preview(showBackground = true)

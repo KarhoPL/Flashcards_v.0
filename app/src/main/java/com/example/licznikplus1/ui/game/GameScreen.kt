@@ -1,6 +1,9 @@
 package com.example.licznikplus1.ui.game
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -11,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -127,62 +131,67 @@ fun GameScreen(
 
         nextQuestion()
     }
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
     ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-        GameHeader(
-            lives = lives,
-            score = score,
-            highScore = highScore
-        )
-        val questionText = currentQuestion?.let {
-            it.flashcard.getField(it.questionField)
-        } ?: ""
+            GameHeader(
+                lives = lives,
+                score = score,
+                highScore = highScore
+            )
+            val questionText = currentQuestion?.let {
+                it.flashcard.getField(it.questionField)
+            } ?: ""
 
-        GamePlayArea(
-            question = questionText,
-            questionFontSize = 48.sp,
-            visibleAnswers = visibleAnswers,
-            onAnswerClick = { answer ->
+            GamePlayArea(
+                question = questionText,
+                questionFontSize = 48.sp,
+                visibleAnswers = visibleAnswers,
+                onAnswerClick = { answer ->
 
-                if (answer.isCorrect) {
+                    if (answer.isCorrect) {
 
-                    score++
+                        score++
 
-                    if (score > highScore) {
+                        if (score > highScore) {
 
-                        coroutineScope.launch {
+                            coroutineScope.launch {
 
-                            gamePreferences.saveHighScore(score)
+                                gamePreferences.saveHighScore(score)
+                            }
                         }
+
+                    } else {
+                        lives--
                     }
-
-                } else {
-                    lives--
-                }
-
-                if (lives <= 0) {
-                    gameOver = true
-                } else {
-                    nextQuestion()
-                }
-            },
-            onAnswerFinished = { answer ->
-
-                if (answer.isCorrect) {
-
-                    lives--
 
                     if (lives <= 0) {
                         gameOver = true
                     } else {
                         nextQuestion()
                     }
-                }
-            }
-        )
+                },
+                onAnswerFinished = { answer ->
 
+                    if (answer.isCorrect) {
+
+                        lives--
+
+                        if (lives <= 0) {
+                            gameOver = true
+                        } else {
+                            nextQuestion()
+                        }
+                    }
+                }
+            )
+
+        }
     }
     if (gameOver) {
 

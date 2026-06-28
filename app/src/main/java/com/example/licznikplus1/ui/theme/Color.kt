@@ -2,13 +2,23 @@ package com.example.licznikplus1.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+// Primary
+val Primary =  Color(0xFFCF9D7C) //boxes
+val Lavender = Color(0xFFB0A3DD)
+val LavenderDark = Color(0xFF8F80C7)
+//Secondary
+val Secondary =  Color(0xFFB0A3DD)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+// Backgrounds
+val Background = Color(0xFF0C151A)
+val Surface = Color(0xFFCF9D7C)
+val SurfaceVariant = Color(0xFFCF9D7C)
 
-val Black00 = Color(0xFF111016)
-val Lavender80 = Color(0xFFB0A3DD)
+// Status
+val Success = Color(0xFF6FCF97)
+val Error = Color(0xFF621F36)
+
+// Text
+val OnPrimary = Color(0xFF3A3434) //on boxes
+val OnSurface = Color(0xFF724C39) //na
+val OnBackground = Color(0xFF724C39)

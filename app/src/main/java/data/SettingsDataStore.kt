@@ -35,6 +35,9 @@ class SettingsDataStore(
 
         private val LEARNING_CARDS_COUNT =
             intPreferencesKey("learning_cards_count")
+
+        private val ONE_HAND_MODE =
+            booleanPreferencesKey("one_hand_mode")
     }
 
     val settings: Flow<AppSettings> =
@@ -57,7 +60,10 @@ class SettingsDataStore(
                 preferences[NEW_CARDS_PER_DAY] ?: 5,
 
                 learningCardsCount =
-                preferences[LEARNING_CARDS_COUNT] ?: 10
+                preferences[LEARNING_CARDS_COUNT] ?: 10,
+
+                oneHandMode =
+                preferences[ONE_HAND_MODE] ?: false,
             )
 
         }
@@ -101,6 +107,14 @@ class SettingsDataStore(
     ) {
         context.dataStore.edit { preferences ->
             preferences[LEARNING_CARDS_COUNT] = value
+        }
+    }
+
+    suspend fun saveOneHandMode(
+        enabled: Boolean
+    ) {
+        context.dataStore.edit { preferences ->
+            preferences[ONE_HAND_MODE] = enabled
         }
     }
 }

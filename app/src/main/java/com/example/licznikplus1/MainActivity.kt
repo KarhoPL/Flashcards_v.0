@@ -14,107 +14,121 @@ import androidx.navigation.compose.rememberNavController
 import com.example.licznikplus1.data.SessionMode
 import com.example.licznikplus1.data.SettingsDataStore
 import com.example.licznikplus1.ui.FlashcardScreen
-import com.example.licznikplus1.ui.game.GameScreen
 import com.example.licznikplus1.ui.HomeScreen
 import com.example.licznikplus1.ui.SettingsScreen
+import com.example.licznikplus1.ui.game.GameScreen
+import com.example.licznikplus1.ui.theme.LicznikPlus1Theme
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val context = LocalContext.current
 
-            val settingsDataStore = remember {
-                SettingsDataStore(context)
-            }
+            LicznikPlus1Theme {
 
-            val settings by settingsDataStore.settings.collectAsState(
-                initial = com.example.licznikplus1.data.AppSettings()
-            )
-            val coroutineScope = rememberCoroutineScope()
-            val navController = rememberNavController()
+                val context = LocalContext.current
 
-            NavHost(
-                navController = navController,
-                startDestination = "home"
-            ) {
-                composable("home") {
-                    HomeScreen(navController)
-                }
-                composable("learning") {
-                    FlashcardScreen(
-                        navController = navController,
-                        autoPlayAudio = settings.autoPlayAudio,
-                        sessionMode = SessionMode.LEARNING,
-                        newCardsPerDay = settings.newCardsPerDay,
-                        learningCardsCount = settings.learningCardsCount,
-                        askChinese = settings.askChinese,
-                        askPolish = settings.askPolish,
-                        askAudio = settings.askAudio,
-                    )
+
+                val settingsDataStore = remember {
+                    SettingsDataStore(context)
                 }
 
-                composable("testing") {
-                    FlashcardScreen(
-                        navController = navController,
-                        autoPlayAudio = settings.autoPlayAudio,
-                        sessionMode = SessionMode.TESTING,
-                        newCardsPerDay = settings.newCardsPerDay,
-                        learningCardsCount = settings.learningCardsCount,
-                        askChinese = settings.askChinese,
-                        askPolish = settings.askPolish,
-                        askAudio = settings.askAudio,
-                    )
-                }
+                val settings by settingsDataStore.settings.collectAsState(
+                    initial = com.example.licznikplus1.data.AppSettings()
+                )
+                val coroutineScope = rememberCoroutineScope()
+                val navController = rememberNavController()
 
-                composable("settings") {
-                    SettingsScreen(
-                        navController = navController,
-                        askChinese = settings.askChinese,
-                        onAskChineseChange = {
-                            coroutineScope.launch {
-                                settingsDataStore.saveAskChinese(it)
-                            }
-                        },
+                NavHost(
+                    navController = navController,
+                    startDestination = "home"
+                ) {
+                    composable("home") {
+                        HomeScreen(navController)
+                    }
+                    composable("learning") {
+                        FlashcardScreen(
+                            navController = navController,
+                            autoPlayAudio = settings.autoPlayAudio,
+                            sessionMode = SessionMode.LEARNING,
+                            newCardsPerDay = settings.newCardsPerDay,
+                            learningCardsCount = settings.learningCardsCount,
+                            askChinese = settings.askChinese,
+                            askPolish = settings.askPolish,
+                            askAudio = settings.askAudio,
+                            oneHandMode = settings.oneHandMode
+                        )
+                    }
 
-                        askPolish = settings.askPolish,
-                        onAskPolishChange = {
-                            coroutineScope.launch {
-                                settingsDataStore.saveAskPolish(it)
-                            }
-                        },
+                    composable("testing") {
+                        FlashcardScreen(
+                            navController = navController,
+                            autoPlayAudio = settings.autoPlayAudio,
+                            sessionMode = SessionMode.TESTING,
+                            newCardsPerDay = settings.newCardsPerDay,
+                            learningCardsCount = settings.learningCardsCount,
+                            askChinese = settings.askChinese,
+                            askPolish = settings.askPolish,
+                            askAudio = settings.askAudio,
+                            oneHandMode = settings.oneHandMode
+                        )
+                    }
 
-                        askAudio = settings.askAudio,
-                        onAskAudioChange = {
-                            coroutineScope.launch {
-                                settingsDataStore.saveAskAudio(it)
+                    composable("settings") {
+                        SettingsScreen(
+                            navController = navController,
+                            askChinese = settings.askChinese,
+                            onAskChineseChange = {
+                                coroutineScope.launch {
+                                    settingsDataStore.saveAskChinese(it)
+                                }
+                            },
+
+                            askPolish = settings.askPolish,
+                            onAskPolishChange = {
+                                coroutineScope.launch {
+                                    settingsDataStore.saveAskPolish(it)
+                                }
+                            },
+
+                            askAudio = settings.askAudio,
+                            onAskAudioChange = {
+                                coroutineScope.launch {
+                                    settingsDataStore.saveAskAudio(it)
+                                }
+                            },
+                            autoPlayAudio = settings.autoPlayAudio,
+                            onAutoPlayAudioChange = {
+                                coroutineScope.launch {
+                                    settingsDataStore.saveAutoPlayAudio(it)
+                                }
+                            },
+                            newCardsPerDay = settings.newCardsPerDay,
+                            onNewCardsPerDayChange = {
+                                coroutineScope.launch {
+                                    settingsDataStore.saveNewCardsPerDay(it)
+                                }
+                            },
+                            learningCardsCount = settings.learningCardsCount,
+                            onLearningCardsCountChange = {
+                                coroutineScope.launch {
+                                    settingsDataStore.saveLearningCardsCount(it)
+                                }
+                            },
+                            oneHandMode = settings.oneHandMode,
+                            onOneHandModeChange = {
+                                coroutineScope.launch {
+                                    settingsDataStore.saveOneHandMode(it)
+                                }
                             }
-                        },
-                        autoPlayAudio = settings.autoPlayAudio,
-                        onAutoPlayAudioChange = {
-                            coroutineScope.launch {
-                                settingsDataStore.saveAutoPlayAudio(it)
-                            }
-                        },
-                        newCardsPerDay = settings.newCardsPerDay,
-                        onNewCardsPerDayChange = {
-                            coroutineScope.launch {
-                                settingsDataStore.saveNewCardsPerDay(it)
-                            }
-                        },
-                        learningCardsCount = settings.learningCardsCount,
-                        onLearningCardsCountChange = {
-                            coroutineScope.launch {
-                                settingsDataStore.saveLearningCardsCount(it)
-                            }
-                        }
-                    )
-                }
-                composable("game") {
-                    GameScreen(
-                        navController = navController
-                    )
+                        )
+                    }
+                    composable("game") {
+                        GameScreen(
+                            navController = navController
+                        )
+                    }
                 }
             }
         }
