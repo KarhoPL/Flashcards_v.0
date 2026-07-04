@@ -15,4 +15,7 @@ interface ReviewEventDao {
 
     @Query("SELECT COUNT(*) FROM review_events")
     suspend fun getCount(): Int
+
+    @Query("DELETE FROM review_events")
+    suspend fun deleteAll()
 }

@@ -43,7 +43,9 @@ fun SettingsScreen(
     reviewNotificationsEnabled: Boolean,
     onReviewNotificationsEnabledChange: (Boolean) -> Unit,
     reviewNotificationThreshold: Int,
-    onReviewNotificationThresholdChange: (Int) -> Unit
+    onReviewNotificationThresholdChange: (Int) -> Unit,
+    onExportClick: () -> Unit,
+    onImportClick: () -> Unit
 ) {
 
     Surface(
@@ -316,6 +318,31 @@ fun SettingsScreen(
                         }
 
                     }
+                }
+                Spacer(Modifier.height(32.dp))
+
+                Divider()
+
+                Spacer(Modifier.height(24.dp))
+
+                Text(
+                    text = "Kopia zapasowa",
+                    fontSize = 22.sp
+                )
+
+                Spacer(Modifier.height(16.dp))
+
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = onExportClick
+                ) {
+                    Text("Eksportuj dane")
+                }
+                Button(
+                    onClick = onImportClick,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Importuj dane")
                 }
             }
 

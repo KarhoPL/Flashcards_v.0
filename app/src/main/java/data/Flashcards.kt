@@ -34,3 +34,19 @@ fun FlashcardField.hasAudio(): Boolean {
     return this == FlashcardField.CHINESE ||
             this == FlashcardField.AUDIO
 }
+
+fun FlashcardEntity.toFlashcard(): Flashcard =
+    Flashcard(
+        id = id,
+        polish = polish,
+        pinyin = pinyin,
+        chinese = chinese
+    )
+
+fun Flashcard.toEntity(): FlashcardEntity =
+    FlashcardEntity(
+        id = id,
+        polish = polish,
+        pinyin = pinyin,
+        chinese = chinese
+    )

@@ -2,7 +2,9 @@ package com.example.licznikplus1.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Entity(tableName = "review_events")
 data class ReviewEventEntity(
 
@@ -15,5 +17,7 @@ data class ReviewEventEntity(
 
     val timestamp: Long,
 
-    val rating: ReviewRating
+    val rating: ReviewRating,
+
+    val intervalHours: Int
 )

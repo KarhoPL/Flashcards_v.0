@@ -28,7 +28,8 @@ fun FallingWord(
     startDelay: Long,
     isCorrect: Boolean,
     onClick: () -> Unit,
-    onFinished: () -> Unit
+    onFinished: () -> Unit,
+    durationMillis: Int
 ){
     val y = remember {
         Animatable(startY)
@@ -50,7 +51,7 @@ fun FallingWord(
         y.animateTo(
             targetValue = endY,
             animationSpec = tween(
-                durationMillis = 4500,
+                durationMillis = durationMillis,
                 easing = LinearEasing
             )
         )

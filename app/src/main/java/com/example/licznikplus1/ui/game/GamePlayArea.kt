@@ -16,7 +16,8 @@ fun GamePlayArea(
     questionFontSize: TextUnit,
     visibleAnswers: SnapshotStateList<FallingAnswer>,
     onAnswerClick: (FallingAnswer) -> Unit,
-    onAnswerFinished: (FallingAnswer) -> Unit
+    onAnswerFinished: (FallingAnswer) -> Unit,
+    fallDuration: Int
 ) {
 
     Column(
@@ -47,7 +48,8 @@ fun GamePlayArea(
                 screenWidth = widthPx,
                 screenHeight = heightPx,
                 onAnswerClick = onAnswerClick,
-                onAnswerFinished = onAnswerFinished
+                onAnswerFinished = onAnswerFinished,
+                fallDuration = fallDuration
             )
         }
     }

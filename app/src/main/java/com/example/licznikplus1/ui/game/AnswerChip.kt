@@ -18,7 +18,7 @@ import com.example.licznikplus1.ui.components.AutoResizeText
 fun AnswerChip(
     text: String,
     modifier: Modifier = Modifier,
-    maxFontSize: TextUnit = 20.sp,
+    maxFontSize: TextUnit = 24.sp,
     containerColor: Color = MaterialTheme.colorScheme.surface
 ) {
 
@@ -40,7 +40,7 @@ fun AnswerChip(
                     vertical = 14.dp
                 ),
             maxFontSize = maxFontSize,
-            minFontSize = 16.sp,
+            minFontSize = 20.sp,
             maxLines = 1,
             textAlign = TextAlign.Center
         )

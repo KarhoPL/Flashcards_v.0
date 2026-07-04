@@ -17,7 +17,8 @@ fun FallingAnswersLayer(
     screenWidth: Int,
     screenHeight: Int,
     onAnswerClick: (FallingAnswer) -> Unit,
-    onAnswerFinished: (FallingAnswer) -> Unit
+    onAnswerFinished: (FallingAnswer) -> Unit,
+    fallDuration: Int
 ) {
 
     Box(
@@ -47,7 +48,8 @@ fun FallingAnswersLayer(
                     isCorrect = answer.isCorrect,
                     onFinished = {
                         onAnswerFinished(answer)
-                    }
+                    },
+                    durationMillis = fallDuration
                 )
             }
         }

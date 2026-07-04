@@ -30,16 +30,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.licznikplus1.audio.TextToSpeechManager
 import com.example.licznikplus1.data.DatabaseProvider
+import com.example.licznikplus1.data.Flashcard
 import com.example.licznikplus1.data.FlashcardField
 import com.example.licznikplus1.data.FlashcardProgressEntity
-import com.example.licznikplus1.data.ReviewEvent
+import com.example.licznikplus1.data.FlashcardRepository
 import com.example.licznikplus1.data.ReviewEventEntity
 import com.example.licznikplus1.data.ReviewRating
 import com.example.licznikplus1.data.SessionBuilder
 import com.example.licznikplus1.data.SessionCard
 import com.example.licznikplus1.data.SessionMode
 import com.example.licznikplus1.data.getField
-import com.example.licznikplus1.data.loadFlashcards
 import com.example.licznikplus1.ui.components.NavigationButtons
 import kotlinx.coroutines.launch
 
@@ -61,6 +61,9 @@ fun FlashcardScreen(
     val database = remember {
         DatabaseProvider.getDatabase(context)
     }
+    val flashcardRepository = remember {
+        FlashcardRepository(context)
+    }
     val reviewEventDao = remember {
         database.reviewEventDao()
     }
@@ -71,8 +74,9 @@ fun FlashcardScreen(
     val textToSpeechManager = remember {
         TextToSpeechManager(context)
     }
-    val flashcards = loadFlashcards(context)
-
+    val flashcards = remember {
+        mutableStateListOf<Flashcard>()
+    }
     val sessionQueue = remember {
         mutableStateListOf<SessionCard>()
     }
@@ -80,17 +84,23 @@ fun FlashcardScreen(
     val cardsFailedThisSession = remember {
         mutableSetOf<String>()
     }
-    val lastRatingForCard = remember {
-        mutableMapOf<String, ReviewRating>()
-    }
-    val reviewEvents = remember {
-        mutableStateListOf<ReviewEvent>()
-    }
-    LaunchedEffect(sessionMode) {
+    LaunchedEffect(
+        sessionMode,
+        askChinese,
+        askPolish,
+        askAudio,
+        newCardsPerDay,
+        learningCardsCount
+    ) {
+
+        flashcards.clear()
+        flashcards.addAll(
+            flashcardRepository.getAll()
+        )
+
+        sessionQueue.clear()
 
         if (sessionMode == SessionMode.LEARNING) {
-
-            sessionQueue.clear()
 
             sessionQueue.addAll(
                 SessionBuilder.buildLearningSession(
@@ -101,8 +111,9 @@ fun FlashcardScreen(
                     askAudio = askAudio
                 )
             )
-        } else if (sessionMode == SessionMode.TESTING) {
-            sessionQueue.clear()
+
+        } else {
+
             sessionQueue.addAll(
                 SessionBuilder.buildTestingSession(
                     flashcards = flashcards,
@@ -115,7 +126,15 @@ fun FlashcardScreen(
             )
         }
     }
-
+    if (flashcards.isEmpty()) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("Ładowanie...")
+        }
+        return
+    }
     if (sessionQueue.isEmpty()) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -149,24 +168,6 @@ fun FlashcardScreen(
             cardsFailedThisSession.add(currentCard.id)
         }
 
-        val event = ReviewEventEntity(
-            cardId = currentCard.id,
-            questionField  = currentQuestionField,
-            timestamp = System.currentTimeMillis(),
-            rating = rating
-        )
-        lastRatingForCard[currentCard.id] = rating
-        if (sessionMode == SessionMode.TESTING) {
-
-            reviewEvents.add(
-                ReviewEvent(
-                    cardId = event.cardId,
-                    timestamp = event.timestamp,
-                    rating = event.rating
-                )
-            )
-        }
-
         val answeredCard = sessionQueue.removeAt(0)
 
         if (rating == ReviewRating.AGAIN) {
@@ -179,19 +180,17 @@ fun FlashcardScreen(
 
             coroutineScope.launch {
 
-                reviewEventDao.insert(event)
+                val now = System.currentTimeMillis()
 
                 val progress =
                     flashcardProgressDao.getByCardId(
                         cardId = currentCard.id,
-                        questionField  = currentQuestionField
+                        questionField = currentQuestionField
                     ) ?: FlashcardProgressEntity(
                         cardId = currentCard.id,
-                        questionField  = currentQuestionField,
-                        introducedAt = System.currentTimeMillis()
+                        questionField = currentQuestionField,
+                        introducedAt = now
                     )
-
-                val now = System.currentTimeMillis()
 
                 val newIntervalHours =
                     if (cardsFailedThisSession.contains(currentCard.id)) {
@@ -204,6 +203,16 @@ fun FlashcardScreen(
                             ReviewRating.AGAIN -> progress.intervalHours
                         }
                     }
+
+                val event = ReviewEventEntity(
+                    cardId = currentCard.id,
+                    questionField = currentQuestionField,
+                    timestamp = now,
+                    rating = rating,
+                    intervalHours = newIntervalHours
+                )
+
+                reviewEventDao.insert(event)
 
                 val updatedProgress = progress.copy(
                     intervalHours = newIntervalHours,
@@ -372,22 +381,8 @@ fun FlashcardScreen(
                     ) {}
                 }
             }
-
-/*
-Text("Źle: ${reviewEvents.count { it.rating == ReviewRating.AGAIN }}")
-
-Text("Trudne: ${reviewEvents.count { it.rating == ReviewRating.HARD }}")
-
-Text("Okej: ${reviewEvents.count { it.rating == ReviewRating.GOOD }}")
-
-Text("Łatwe: ${reviewEvents.count { it.rating == ReviewRating.EASY }}")
-
-Text("Odpowiedzi: $reviewCount")
-
- */
-}
-
-}
+        }
+    }
 }
 
 //@Preview(showBackground = true)

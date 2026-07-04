@@ -20,11 +20,12 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.licznikplus1.audio.TextToSpeechManager
 import com.example.licznikplus1.data.DatabaseProvider
+import com.example.licznikplus1.data.Flashcard
 import com.example.licznikplus1.data.FlashcardField
+import com.example.licznikplus1.data.FlashcardRepository
 import com.example.licznikplus1.data.GameBuilder
 import com.example.licznikplus1.data.GamePreferences
 import com.example.licznikplus1.data.getField
-import com.example.licznikplus1.data.loadFlashcards
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -42,8 +43,12 @@ fun GameScreen(
     }
     val coroutineScope = rememberCoroutineScope()
 
+    val flashcardRepository = remember {
+        FlashcardRepository(context)
+    }
+
     val flashcards = remember {
-        loadFlashcards(context)
+        mutableStateListOf<Flashcard>()
     }
     val database = remember {
         DatabaseProvider.getDatabase(context)
@@ -70,6 +75,10 @@ fun GameScreen(
     var score by remember {
         mutableStateOf(0)
     }
+    val fallDuration = maxOf(
+        1800,
+        6000 - score * 50
+    )
     val highScore by gamePreferences.highScore.collectAsState(
         initial = 0
     )
@@ -120,8 +129,12 @@ fun GameScreen(
 
     LaunchedEffect(Unit) {
 
-        learnedCards.clear()
+        flashcards.clear()
+        flashcards.addAll(
+            flashcardRepository.getAll()
+        )
 
+        learnedCards.clear()
         learnedCards.addAll(
             GameBuilder.getLearnedCards(
                 flashcards = flashcards,
@@ -130,6 +143,9 @@ fun GameScreen(
         )
 
         nextQuestion()
+    }
+    if (flashcards.isEmpty()) {
+        return
     }
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -188,7 +204,8 @@ fun GameScreen(
                             nextQuestion()
                         }
                     }
-                }
+                },
+                fallDuration = fallDuration
             )
 
         }

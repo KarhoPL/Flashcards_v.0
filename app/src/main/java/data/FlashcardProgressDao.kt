@@ -67,6 +67,10 @@ FROM flashcard_progress
 WHERE nextReviewDate <= :now
 """)
     suspend fun getDueCardsCount(now: Long): Int
-    
+
+    @Query("DELETE FROM flashcard_progress")
+    suspend fun deleteAll()
+
+
 }
 

@@ -1,7 +1,9 @@
 package com.example.licznikplus1.data
 
 import androidx.room.Entity
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Entity(
     tableName = "flashcard_progress",
     primaryKeys = ["cardId", "questionField"]
